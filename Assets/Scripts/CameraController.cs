@@ -2,13 +2,21 @@
 using System.Collections;
 
 public class CameraController : MonoBehaviour {
-	
-	public float cameraMoveSpeedMultiplier;
 
-	// Update is called once per frame
-	void Update () {
-		float x = transform.position.x + (Input.GetAxis ("Horizontal") * cameraMoveSpeedMultiplier);
-		float y = transform.position.y + (Input.GetAxis ("Vertical") * cameraMoveSpeedMultiplier);
-		transform.position = new Vector3 (x, y, transform.position.z);
-	}
+		public float dampTime;
+		private Vector3 velocity = Vector3.zero;
+		public Transform target;
+
+		// Update is called once per frame
+		void Update () 
+		{
+			if (target)
+			{
+				Vector3 point = GetComponent<Camera>().WorldToViewportPoint(target.position);
+				Vector3 delta = target.position - GetComponent<Camera>().ViewportToWorldPoint(new Vector3(0.5f, 0.5f, point.z)); //(new Vector3(0.5, 0.5, point.z));
+				Vector3 destination = transform.position + delta;
+				transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime);
+			}
+
+		}
 }

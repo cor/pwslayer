@@ -7,8 +7,7 @@ public class LevelGenerator : MonoBehaviour {
 	public GameObject levelParent;
 
 
-	public Room room;
-	public Position roomPosition;
+	public Room[] rooms;
 
 	public GameObject voidTile;
 	public GameObject groundTile;
@@ -51,27 +50,30 @@ public class LevelGenerator : MonoBehaviour {
 				level [x, y] = "void";
 			}
 		}
-			
-		AddRoomToModel (room, roomPosition);
+
+		for (int i = 0; i < rooms.GetLength(0); i++) {
+			AddRoomToModel (rooms[i]);	
+		}
+
 	}
 
-	void AddRoomToModel(Room roomToAdd, Position position) {
+	void AddRoomToModel(Room room) {
 		// Place ground everywhere
 		for (int x = 0; x < room.size.width; x++) {
 			for (int y = 0; y < room.size.height; y++) {
-				level [position.x + x, position.y + y] = "ground";
+				level [room.position.x + x, room.position.y + y] = "ground";
 			}
 		}
 
 		//Replace the outer rows with wall
 		for (int x = 0; x < room.size.width; x++) {
-			level [position.x + x, position.y + 0] = "wall";
-			level [position.x + x, position.y + (room.size.height - 1)] = "wall";
+			level [room.position.x + x, room.position.y + 0] = "wall";
+			level [room.position.x + x, room.position.y + (room.size.height - 1)] = "wall";
 		}
 
 		for (int y = 0; y < room.size.height; y++) {
-			level [position.x + 0, position.y + y] = "wall";
-			level [position.x + (room.size.width - 1), position.y + y] = "wall"; 
+			level [room.position.x + 0, room.position.y + y] = "wall";
+			level [room.position.x + (room.size.width - 1), room.position.y + y] = "wall"; 
 		}
 	}
 
