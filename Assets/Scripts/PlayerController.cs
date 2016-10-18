@@ -18,9 +18,7 @@ public class PlayerController : MonoBehaviour {
 			dx = 1;
 		} else if (Input.GetKeyDown(KeyCode.A)) {
 			dx = -1;
-		}
-
-		if (Input.GetKeyDown (KeyCode.W)) {
+		} else if (Input.GetKeyDown (KeyCode.W)) {
 			dy = 1;
 		} else if (Input.GetKeyDown (KeyCode.S)) {
 			dy = -1;
