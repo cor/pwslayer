@@ -3,14 +3,17 @@ using System.Collections;
 
 public class LevelGenerator : MonoBehaviour {
 
-	public Room room;
+	public Size levelSize;
 
-	public GameObject ground;
-	public GameObject wall;
-	public GameObject door;
+	public Room room;
+	public Position roomPosition;
+
+	public GameObject voidTile;
+	public GameObject groundTile;
+	public GameObject wallTile;
+	public GameObject doorTile;
 
 	string[,] level;
-
 
 	// Use this for initialization
 	void Start () {
@@ -18,33 +21,44 @@ public class LevelGenerator : MonoBehaviour {
 		RenderLevel ();
 	}
 
-	void SpawnTile(GameObject tile, Vector2 position) {
+	void SpawnTile(GameObject tile, Position position) {
 		
 		GameObject groundClone = (GameObject) Instantiate (tile, new Vector3 (position.x, position.y, 0), transform.rotation);
 	}
 
 	void GenerateLevelModel() {
+		level = new string[levelSize.width, levelSize.height];
 
-		level = new string[room.width, room.height];
+		for (int x = 0; x < level.GetLength(0); x++) {
+			for (int y = 0; y < level.GetLength(1); y++) {
+				level [x, y] = "void";
+			}
+		}
+			
+		AddRoomToModel (room, roomPosition);
+	}
 
+	void AddRoomToModel(Room roomToAdd, Position position) {
 		// Place ground everywhere
-		for (int x = 0; x < room.width; x++) {
-			for (int y = 0; y < room.height; y++) {
-				level [x, y] = "ground";
+		for (int x = 0; x < room.size.width; x++) {
+			for (int y = 0; y < room.size.height; y++) {
+				level [position.x + x, position.y + y] = "ground";
 			}
 		}
 
 		//Replace the outer rows with wall
-		for (int x = 0; x < room.width; x++) {
-			level [x, 0] = "wall";
-			level [x, room.height - 1] = "wall";
+		for (int x = 0; x < room.size.width; x++) {
+			level [position.x + x, position.y + 0] = "wall";
+			level [position.x + x, position.y + (room.size.height - 1)] = "wall";
 		}
 
-		for (int y = 0; y < room.height; y++) {
-			level [0, y] = "wall";
-			level [room.width - 1, y] = "wall"; 
+		for (int y = 0; y < room.size.height; y++) {
+			level [position.x + 0, position.y + y] = "wall";
+			level [position.x + (room.size.width - 1), position.y + y] = "wall"; 
 		}
 	}
+
+
 
 	void RenderLevel() {
 		for (int x = 0; x < level.GetLength(0); x++) {
@@ -53,7 +67,7 @@ public class LevelGenerator : MonoBehaviour {
 				string tileName = level [x, y];
 				GameObject tile = TileForName(tileName);
 
-				SpawnTile(tile, new Vector2(x, y));
+				SpawnTile(tile, new Position(x, y));
 			}
 		}
 	}
@@ -62,11 +76,13 @@ public class LevelGenerator : MonoBehaviour {
 		
 		switch (name) {
 		case "ground":
-			return ground;
+			return groundTile;
 		case "wall":
-			return wall;
+			return wallTile;
 		case "door":
-			return door;
+			return doorTile;
+		case "void":
+			return voidTile;
 		default:
 			return null;
 		}

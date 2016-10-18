@@ -5,13 +5,12 @@ using System.Collections;
 [System.Serializable]
 public class Room {
 
-	public int width;
-	public int height;
+	public Size size;
 
-	public Room(int width, int height) {
+
+	public Room(Size size) {
 		
-		this.width = width;
-		this.height = height;
+		this.size = size;
 	}
 
 }
