@@ -159,12 +159,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53595564f65cf4aa5bf17f2f26ee7ffc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelSize:
+    width: 50
+    height: 50
   room:
-    width: 4
-    height: 7
-  ground: {fileID: 1000010625990680, guid: 2357b298e31cd4595bf7626c906d8208, type: 2}
-  wall: {fileID: 1000010932007328, guid: e097c1c71363d491287b996d7b099fb0, type: 2}
-  door: {fileID: 1000014184916434, guid: 646001609d6a040bd88275d9fc2dc2c4, type: 2}
+    size:
+      width: 20
+      height: 6
+  roomPosition:
+    x: 10
+    y: 10
+  voidTile: {fileID: 1000010279110768, guid: ce00e9e082a1947b687fd437b143110a, type: 2}
+  groundTile: {fileID: 1000010625990680, guid: 2357b298e31cd4595bf7626c906d8208, type: 2}
+  wallTile: {fileID: 1000010932007328, guid: e097c1c71363d491287b996d7b099fb0, type: 2}
+  doorTile: {fileID: 1000014184916434, guid: 646001609d6a040bd88275d9fc2dc2c4, type: 2}
 --- !u!4 &1848215551
 Transform:
   m_ObjectHideFlags: 0
