@@ -4,6 +4,8 @@ using System.Collections;
 public class LevelGenerator : MonoBehaviour {
 
 	public Size levelSize;
+	public GameObject levelParent;
+
 
 	public Room room;
 	public Position roomPosition;
@@ -13,17 +15,32 @@ public class LevelGenerator : MonoBehaviour {
 	public GameObject wallTile;
 	public GameObject doorTile;
 
+	public bool shouldAutoUpdate;
+
 	string[,] level;
 
 	// Use this for initialization
 	void Start () {
+		GenerateLevel ();
+	}
+
+	public void GenerateLevel() {
+
+		DeleteLevel ();
 		GenerateLevelModel ();
 		RenderLevel ();
 	}
 
+	void DeleteLevel() {
+		while(levelParent.transform.childCount != 0){
+			DestroyImmediate(levelParent.transform.GetChild(0).gameObject);
+		}
+	}
+
 	void SpawnTile(GameObject tile, Position position) {
 		
-		GameObject groundClone = (GameObject) Instantiate (tile, new Vector3 (position.x, position.y, 0), transform.rotation);
+		GameObject tileClone = (GameObject) Instantiate (tile, new Vector3 (position.x, position.y, 0), transform.rotation);
+		tileClone.transform.parent = levelParent.transform;
 	}
 
 	void GenerateLevelModel() {
