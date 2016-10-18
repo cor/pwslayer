@@ -159,8 +159,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53595564f65cf4aa5bf17f2f26ee7ffc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 5
-  height: 6
+  room:
+    width: 4
+    height: 7
   ground: {fileID: 1000010625990680, guid: 2357b298e31cd4595bf7626c906d8208, type: 2}
   wall: {fileID: 1000010932007328, guid: e097c1c71363d491287b996d7b099fb0, type: 2}
   door: {fileID: 1000014184916434, guid: 646001609d6a040bd88275d9fc2dc2c4, type: 2}

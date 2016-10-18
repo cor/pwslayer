@@ -3,8 +3,7 @@ using System.Collections;
 
 public class LevelGenerator : MonoBehaviour {
 
-	public int width;
-	public int height;
+	public Room room;
 
 	public GameObject ground;
 	public GameObject wall;
@@ -26,24 +25,24 @@ public class LevelGenerator : MonoBehaviour {
 
 	void GenerateLevelModel() {
 
-		level = new string[width, height];
+		level = new string[room.width, room.height];
 
 		// Place ground everywhere
-		for (int i = 0; i < width; i++) {
-			for (int j = 0; j < height; j++) {
-				level [i, j] = "ground";
+		for (int x = 0; x < room.width; x++) {
+			for (int y = 0; y < room.height; y++) {
+				level [x, y] = "ground";
 			}
 		}
 
 		//Replace the outer rows with wall
-		for (int x = 0; x < level.GetLength(0); x++) {
+		for (int x = 0; x < room.width; x++) {
 			level [x, 0] = "wall";
-			level [x, level.GetLength (1) - 1] = "wall";
+			level [x, room.height - 1] = "wall";
 		}
 
-		for (int y = 0; y < level.GetLength (1); y++) {
+		for (int y = 0; y < room.height; y++) {
 			level [0, y] = "wall";
-			level [level.GetLength (0) - 1, y] = "wall"; 
+			level [room.width - 1, y] = "wall"; 
 		}
 	}
 
