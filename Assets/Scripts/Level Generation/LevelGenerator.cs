@@ -6,7 +6,6 @@ public class LevelGenerator : MonoBehaviour {
 	public Size levelSize;
 	public GameObject levelParent;
 
-
 	public Room[] rooms;
 
 	public GameObject voidTile;
@@ -34,6 +33,10 @@ public class LevelGenerator : MonoBehaviour {
 		while(levelParent.transform.childCount != 0){
 			DestroyImmediate(levelParent.transform.GetChild(0).gameObject);
 		}
+	}
+
+	bool CanMoveToTile(Position position) {
+		return level [position.x, position.y] == "ground";
 	}
 
 	void SpawnTile(GameObject tile, Position position) {

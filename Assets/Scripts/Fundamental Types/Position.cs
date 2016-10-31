@@ -10,4 +10,9 @@ public struct Position {
 		this.x = x;
 		this.y = y;
 	}
+
+	public static Position operator +(Position p, Vector v) 
+	{
+		return new Position(p.x + v.dx, p.y + v.dy);
+	}
 }
