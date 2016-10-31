@@ -11,7 +11,7 @@ public class PlayerEditor : Editor {
 		DrawDefaultInspector ();
 
 		if(GUILayout.Button("Update")) {
-			player.UpdatePosition();
+			player.Render();
 		}
 	}
 }

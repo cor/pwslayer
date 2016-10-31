@@ -24,8 +24,8 @@ public class Level : MonoBehaviour {
 	public void Generate() {
 
 		DeleteTiles ();
-		GenerateTilesModel ();
-		RenderTiles ();
+		GenerateModel ();
+		Render ();
 	}
 
 	void DeleteTiles() {
@@ -42,7 +42,7 @@ public class Level : MonoBehaviour {
 		tileClone.transform.parent = transform;
 	}
 
-	void GenerateTilesModel() {
+	void GenerateModel() {
 		tiles = new string[size.width, size.height];
 
 		for (int x = 0; x < tiles.GetLength(0); x++) {
@@ -79,7 +79,7 @@ public class Level : MonoBehaviour {
 
 
 
-	void RenderTiles() {
+	void Render() {
 		for (int x = 0; x < tiles.GetLength(0); x++) {
 			for (int y = 0; y < tiles.GetLength(1); y++) {
 
