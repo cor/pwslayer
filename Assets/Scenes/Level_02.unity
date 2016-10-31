@@ -98580,6 +98580,7 @@ MonoBehaviour:
   position:
     x: 11
     y: 10
+  flipped: 0
 --- !u!212 &2098671482
 SpriteRenderer:
   m_ObjectHideFlags: 0

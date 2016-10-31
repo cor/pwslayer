@@ -19,17 +19,14 @@ public class Player: MonoBehaviour {
 	void Update () {
 
 
-		if (Input.GetKeyDown(KeyCode.D)) {
-			Move (Direction.East);	
-			flipped = false;
-		} else if (Input.GetKeyDown(KeyCode.A)) {
-			Move (Direction.West);
-			flipped = true;
-		} else if (Input.GetKeyDown (KeyCode.W)) {
-			Move (Direction.North);
-		} else if (Input.GetKeyDown (KeyCode.S)) {
-			Move (Direction.South);
-		}
+		if (Input.GetKeyDown(KeyCode.Q)) { Move (Direction.NorthWest); }
+		else if (Input.GetKeyDown(KeyCode.W)) { Move (Direction.North); }
+		else if (Input.GetKeyDown(KeyCode.E)) { Move (Direction.NorthEast); }
+		else if (Input.GetKeyDown(KeyCode.D)) { Move (Direction.East); }
+		else if (Input.GetKeyDown(KeyCode.C)) { Move (Direction.SouthEast); }
+		else if (Input.GetKeyDown(KeyCode.X)) { Move (Direction.South); }
+		else if (Input.GetKeyDown(KeyCode.Z)) { Move (Direction.SouthWest); }
+		else if (Input.GetKeyDown(KeyCode.A)) { Move (Direction.West); }
 
 		Render ();
 	}
