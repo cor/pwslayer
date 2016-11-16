@@ -25053,6 +25053,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 20000011673047238, guid: eae93a6f219dd46ce8ae7c7bd381e8ee,
+        type: 2}
+      propertyPath: orthographic
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: eae93a6f219dd46ce8ae7c7bd381e8ee, type: 2}
   m_IsPrefabParent: 0
@@ -98661,6 +98666,7 @@ MonoBehaviour:
     x: 11
     y: 10
   flipped: 0
+  smoothTime: 0.1
 --- !u!212 &2098671482
 SpriteRenderer:
   m_ObjectHideFlags: 0

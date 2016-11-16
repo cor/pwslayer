@@ -7,6 +7,11 @@ public class Player: MonoBehaviour {
 	public Position position;
 	public bool flipped;
 
+	// Animation
+	public float smoothTime = 0.3f;
+	private Vector3 velocity = Vector3.zero;
+
+
 	Dictionary<KeyCode, Direction> directionKeymaps = new Dictionary<KeyCode, Direction>() {
 		{ KeyCode.Q, Direction.NorthWest },
 		{ KeyCode.W, Direction.North },
@@ -40,8 +45,9 @@ public class Player: MonoBehaviour {
 
 	public void Render() {
 
-		// Update the GameObjects's position to represent the model's Position
-		transform.position = new Vector3 (position.x, position.y, transform.position.z);
+		// Update the GameObjects's position to represent the model's Position 
+		Vector3 targetPosition = new Vector3 (position.x, position.y, transform.position.z);
+		transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
 
 		// Update scale to show flipped
 		transform.localScale = new Vector3 (
