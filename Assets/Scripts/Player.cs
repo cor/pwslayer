@@ -18,7 +18,7 @@ public class Player: MonoBehaviour {
 		{ KeyCode.A, Direction.West }
 	};
 
-	void Move(Direction direction) {
+	public void Move (Direction direction) {
 
 		Level level = GameObject.FindWithTag("Level").GetComponent<Level>();
 
@@ -29,13 +29,11 @@ public class Player: MonoBehaviour {
 		
 	void Update () {
 
-
 		foreach(var keymap in directionKeymaps) {
 			if (Input.GetKeyDown (keymap.Key)) {
 				Move (keymap.Value);
 				break;
 			}
-	
 		}
 		Render ();
 	}
