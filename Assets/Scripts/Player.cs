@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
 public class Player: MonoBehaviour {
 
@@ -10,20 +9,12 @@ public class Player: MonoBehaviour {
 	// Animation
 	public float smoothTime = 0.3f;
 	private Vector3 velocity = Vector3.zero;
+	private Direction lastMoveDirection = Direction.North;
 
-
-	Dictionary<KeyCode, Direction> directionKeymaps = new Dictionary<KeyCode, Direction>() {
-		{ KeyCode.Q, Direction.NorthWest },
-		{ KeyCode.W, Direction.North },
-		{ KeyCode.E, Direction.NorthEast },
-		{ KeyCode.D, Direction.East },
-		{ KeyCode.C, Direction.SouthEast },
-		{ KeyCode.X, Direction.South },
-		{ KeyCode.Z, Direction.SouthWest },
-		{ KeyCode.A, Direction.West }
-	};
 
 	public void Move (Direction direction) {
+
+		lastMoveDirection = direction;
 
 		Level level = GameObject.FindWithTag("Level").GetComponent<Level>();
 
@@ -34,12 +25,6 @@ public class Player: MonoBehaviour {
 		
 	void Update () {
 
-		foreach(var keymap in directionKeymaps) {
-			if (Input.GetKeyDown (keymap.Key)) {
-				Move (keymap.Value);
-				break;
-			}
-		}
 		Render ();
 	}
 
@@ -50,6 +35,19 @@ public class Player: MonoBehaviour {
 		transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
 
 		// Update scale to show flipped
+		switch (lastMoveDirection) {
+		case Direction.NorthEast:
+		case Direction.East:
+		case Direction.SouthEast:
+			flipped = false;
+			break;
+		case Direction.SouthWest:
+		case Direction.West:
+		case Direction.NorthWest:
+			flipped = true;
+			break;
+		}
+
 		transform.localScale = new Vector3 (
 			(flipped ? -1 : 1), 
 			transform.localScale.y, 
