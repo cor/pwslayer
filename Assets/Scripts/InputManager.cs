@@ -19,14 +19,11 @@ public class InputManager : MonoBehaviour {
 			// Calculate Direction
 			int dx = Mathf.RoundToInt(ray.origin.x - player.transform.position.x);
 			int dy = Mathf.RoundToInt(ray.origin.y - player.transform.position.y);
-			Direction direction = new Vector (dx, dy).ToDirection ();
+			Direction? direction = new Vector (dx, dy).ToDirection ();
 
-
-			if (dx != 0 || dy != 0) {
-				// Move Player in direction
-				player.GetComponent<Player>().Move(direction);
+			if (direction.HasValue) {
+				player.GetComponent<Player> ().Move (direction.Value);
 			}
-				
 		}
 	}
 }

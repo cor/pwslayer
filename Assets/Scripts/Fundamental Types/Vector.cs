@@ -17,7 +17,7 @@ public struct Vector
 		return new Vector(v1.dx + v2.dx, v1.dy + v2.dy);
 	}
 
-	public Direction ToDirection() {
+	public Direction? ToDirection() {
 		if (dx == 0 && dy > 0)
 			return Direction.North;
 		else if (dx > 0 && dy > 0)
@@ -32,8 +32,9 @@ public struct Vector
 			return Direction.SouthWest;
 		else if (dx < 0 && dy == 0)
 			return Direction.West;
-		else
+		else if (dx < 0 && dy > 0)
 			return Direction.NorthWest;
-		
+		else
+			return null;
 	}
 }
