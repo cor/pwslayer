@@ -34,5 +34,6 @@ public struct Vector
 			return Direction.West;
 		else
 			return Direction.NorthWest;
+		
 	}
 }

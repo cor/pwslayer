@@ -22,8 +22,10 @@ public class InputManager : MonoBehaviour {
 			Direction direction = new Vector (dx, dy).ToDirection ();
 
 
-			// Move Player in direction
-			player.GetComponent<Player>().Move(direction);
+			if (dx != 0 || dy != 0) {
+				// Move Player in direction
+				player.GetComponent<Player>().Move(direction);
+			}
 				
 		}
 	}
