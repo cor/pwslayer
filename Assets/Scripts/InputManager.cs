@@ -7,6 +7,15 @@ public class InputManager : MonoBehaviour {
 
 
 
+	private bool IsPointerOverUIObject() {
+		PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+		eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+		List<RaycastResult> results = new List<RaycastResult>();
+		EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+		return results.Count > 0;
+	}
+
+
 	Dictionary<KeyCode, Direction> directionKeymaps = new Dictionary<KeyCode, Direction>() {
 		{ KeyCode.Q, Direction.NorthWest },
 		{ KeyCode.W, Direction.North },
@@ -18,6 +27,7 @@ public class InputManager : MonoBehaviour {
 		{ KeyCode.A, Direction.West }
 	};
 		
+
 	
 	// Update is called once per frame
 	void Update () {
@@ -35,7 +45,7 @@ public class InputManager : MonoBehaviour {
 
 
 			// Read as: If the poiter is NOT on a UI element
-			if (!EventSystem.current.IsPointerOverGameObject ()) {
+			if (!IsPointerOverUIObject()) {
 			
 				// Get Player and mouse click
 				Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
