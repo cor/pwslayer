@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 public class InputManager : MonoBehaviour {
 
@@ -32,17 +33,24 @@ public class InputManager : MonoBehaviour {
 
 		if (Input.GetMouseButtonDown (0)) {
 
-			// Get Player and mouse click
-			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 
-			// Calculate Direction
-			int dx = Mathf.RoundToInt(ray.origin.x - player.transform.position.x);
-			int dy = Mathf.RoundToInt(ray.origin.y - player.transform.position.y);
-			Direction? direction = new Vector (dx, dy).ToDirection ();
+			// Read as: If the poiter is NOT on a UI element
+			if (!EventSystem.current.IsPointerOverGameObject ()) {
+			
+				// Get Player and mouse click
+				Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 
-			if (direction.HasValue) {
-				player.GetComponent<Player> ().Move (direction.Value);
+				// Calculate Direction
+				int dx = Mathf.RoundToInt(ray.origin.x - player.transform.position.x);
+				int dy = Mathf.RoundToInt(ray.origin.y - player.transform.position.y);
+				Direction? direction = new Vector (dx, dy).ToDirection ();
+
+				if (direction.HasValue) {
+					player.GetComponent<Player> ().Move (direction.Value);
+				}
+
 			}
+
 		}
 	}
 }
