@@ -6,6 +6,7 @@ public class CameraController : MonoBehaviour {
 
 	// Pinch to zoom
 	public float zoomSpeed = .5f;
+	public float maxZoom;
 
 	public float dampTime;
 	private Vector3 velocity = Vector3.zero;
@@ -29,7 +30,7 @@ public class CameraController : MonoBehaviour {
 
 			Camera cam = GetComponent<Camera> ();
 			cam.orthographicSize += deltaMagnitudediff * zoomSpeed;
-			cam.orthographicSize = Mathf.Max (cam.orthographicSize, .1f);
+			cam.orthographicSize = Mathf.Max (cam.orthographicSize, maxZoom);
 
 		}
 	}
