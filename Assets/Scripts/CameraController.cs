@@ -25,7 +25,7 @@ public class CameraController : MonoBehaviour {
 			float prevTouchDeltaMagnitude = (touchZeroPrevPos - touchOnePrevPos).magnitude;
 			float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
 
-			float deltaMagnitudediff = prevTouchDeltaMagnitude = touchDeltaMag;
+			float deltaMagnitudediff = prevTouchDeltaMagnitude - touchDeltaMag;
 
 			Camera cam = GetComponent<Camera> ();
 			cam.orthographicSize += deltaMagnitudediff * zoomSpeed;
