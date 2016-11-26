@@ -96871,6 +96871,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb310f006637c40e685de64dcb2b94ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  zoomSpeed: 0.001
   dampTime: 0.15
   target: {fileID: 2098671483}
 --- !u!1 &2055780632
