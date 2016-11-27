@@ -1,17 +1,17 @@
 [
 	{
 		"id": 0,
-		"title": "Steel Gloves",
-		"value": 6,
+		"title": "Silver Sword",
+		"value": 200,
 		"stats": {
-			"power": 1,
-			"defence": 4,
+			"power": 300,
+			"defence": 50,
 			"vitality": 2
 		},
-		"description": "Gloves made from steel. Yea.",
+		"description": "Silverlight Sword",
 		"stackable": false,
-		"rarity": 2,
-		"slug": "steel_glove"
+		"rarity": 5,
+		"slug": "silver_sword"
 	},
 	{
 		"id": 1,
