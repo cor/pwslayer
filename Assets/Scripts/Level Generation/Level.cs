@@ -141,4 +141,14 @@ public class Level : MonoBehaviour {
 	public bool CanMoveToTile(Position position) {
 		return tiles [position.x, position.y] == "ground";
 	}
+
+	public GameObject EnemyIsOnTile(Position position) {
+		for (int i = 0; i < enemies.Count; i++) {
+			if (enemies [i].GetComponent<Enemy> ().position.x == position.x &&
+			    enemies [i].GetComponent<Enemy> ().position.y == position.y) {
+				return enemies[i];
+			}
+		}
+		return null;
+	}
 }

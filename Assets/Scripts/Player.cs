@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+
 
 public class Player: MonoBehaviour {
 
@@ -19,10 +21,17 @@ public class Player: MonoBehaviour {
 		Level level = GameObject.FindWithTag("Level").GetComponent<Level>();
 
 		if (level.CanMoveToTile(position + direction.ToVector())) {
+			
 			position += direction.ToVector ();
+
+			GameObject enemy = level.EnemyIsOnTile (position);
+			if (enemy != null) {
+				enemy.SetActive(false);
+			}
 		}
+
 	}
-		
+				
 	void Update () {
 
 		Render ();
