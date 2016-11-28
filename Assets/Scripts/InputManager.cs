@@ -53,7 +53,7 @@ public class InputManager : MonoBehaviour {
 
 				// Get Player and mouse click
 				Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-				// Check whether enemy is in range (not properly working)
+				// Check whether enemy is in range (sorta properly working)
 				int deltaX = Mathf.RoundToInt(player.transform.position.x - enemy.transform.position.x);
 				int deltaY = Mathf.RoundToInt(player.transform.position.y - enemy.transform.position.y);
 				if (-1 <= deltaX && deltaX <= 1 && -1 <= deltaY && deltaY <= 1) {
@@ -66,8 +66,9 @@ public class InputManager : MonoBehaviour {
 				if (Mathf.RoundToInt (ray.origin.x) == enemy.transform.position.x && Mathf.RoundToInt (ray.origin.y) == enemy.transform.position.y) {
 					if (enemyInRange) {
 						Debug.Log ("in range");
+
 					} else {
-						Debug.Log ("out of range");
+						Debug.Log ("enemy out of range");
 					}
 				} else {
 					// Calculate Direction
