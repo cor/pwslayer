@@ -54,8 +54,8 @@ public class InputManager : MonoBehaviour {
 				// Get Player and mouse click
 				Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 				// Check whether enemy is in range (not properly working)
-				float deltaX = player.transform.position.x - enemy.transform.position.x;
-				float deltaY = player.transform.position.y - enemy.transform.position.y;
+				int deltaX = Mathf.RoundToInt(player.transform.position.x - enemy.transform.position.x);
+				int deltaY = Mathf.RoundToInt(player.transform.position.y - enemy.transform.position.y);
 				if (-1 <= deltaX && deltaX <= 1 && -1 <= deltaY && deltaY <= 1) {
 					enemyInRange = true;
 				} 
