@@ -15,10 +15,12 @@ public class Level : MonoBehaviour {
 	public bool shouldAutoUpdate;
 
 	string[,] tiles;
+	public GameObject[] enemies;
 
 	// Use this for initialization
 	void Start () {
 		Generate ();
+		enemies = GameObject.FindGameObjectsWithTag ("Enemy");
 	}
 
 	public void Generate() {
