@@ -37,30 +37,53 @@ public class Inventory : MonoBehaviour {
 
 		AddItem (0);
 		AddItem (1);
+		AddItem (1);
 	}
 
 	public void AddItem(int id) {
 		Item itemToAdd = database.FetchItemByID (id);
-		for (int i = 0; i < items.Count; i++) {
 
-			// Empty slot
-			if (items [i].ID == -1) {
-				items [i] = itemToAdd;
-				GameObject itemObject = Instantiate (inventoryItem);
-				itemObject.transform.SetParent (slots[i].transform);
-				itemObject.GetComponent<Image> ().sprite = itemToAdd.Sprite;
-			
-				// Propperly position item on slot image
-				RectTransform itemRectTrasform = itemObject.GetComponent<RectTransform> ();
-				itemRectTrasform.offsetMin = Vector2.zero;
-				itemRectTrasform.offsetMax = Vector2.zero;
-
-				itemObject.name = itemToAdd.Title;
-
-				//Break out of the loop after adding an item
-				break;
+		if (itemToAdd.Stackable && CheckIfItemIsInInventory (itemToAdd)) {
+			for (int i = 0; i < items.Count; i++) {
+				if (items [i].ID == id) {
+					ItemData data = slots [i].transform.GetChild (0).GetComponent<ItemData> ();
+					data.amount++;
+					data.transform.GetChild (0).GetComponent<Text> ().text = (data.amount + 1).ToString();
+					break;
+				}
 			}
+		} else {
 
+			for (int i = 0; i < items.Count; i++) {
+
+				// Empty slot
+				if (items [i].ID == -1) {
+					items [i] = itemToAdd;
+					GameObject itemObject = Instantiate (inventoryItem);
+					itemObject.transform.SetParent (slots [i].transform);
+					itemObject.GetComponent<Image> ().sprite = itemToAdd.Sprite;
+			
+					// Propperly position item on slot image
+					RectTransform itemRectTrasform = itemObject.GetComponent<RectTransform> ();
+					itemRectTrasform.offsetMin = Vector2.zero;
+					itemRectTrasform.offsetMax = Vector2.zero;
+
+					itemObject.name = itemToAdd.Title;
+
+					//Break out of the loop after adding an item
+					break;
+				}
+
+			}
 		}
+	}
+
+	bool CheckIfItemIsInInventory(Item item) {
+		for (int i = 0; i < items.Count; i++) {
+			if (items [i].ID == item.ID) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
