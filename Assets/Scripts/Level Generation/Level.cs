@@ -1,33 +1,54 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Level : MonoBehaviour {
 
 	public Size size;
 
 	public Room[] rooms;
+	public EnemyDefinition[] enemyDefinitions;
 
 	public GameObject voidTile;
 	public GameObject groundTile;
 	public GameObject wallTile;
 	public GameObject doorTile;
 
+	public GameObject slime;
+
 	public bool shouldAutoUpdate;
 
 	string[,] tiles;
-	public GameObject[] enemies;
+	List<GameObject> enemies = new List<GameObject>();
 
 	// Use this for initialization
 	void Start () {
 		Generate ();
-		enemies = GameObject.FindGameObjectsWithTag ("Enemy");
 	}
 
 	public void Generate() {
 
 		DeleteTiles ();
+
 		GenerateModel ();
 		Render ();
+		AddEnemiesFromEnemyDefinitions ();
+
+	}
+		
+	void AddEnemiesFromEnemyDefinitions() {
+		for (int i = 0; i < enemyDefinitions.Length; i++) {
+
+			Debug.Log ("Add enemy");
+
+			Position enemyPosition = enemyDefinitions [i].position;
+
+			GameObject enemyClone = (GameObject)Instantiate (slime, new Vector3 (enemyPosition.x, enemyPosition.y, -1), transform.rotation);
+			enemyClone.transform.parent = transform;
+			slime.GetComponent<Enemy> ().position = enemyPosition;
+
+			enemies.Add(enemyClone)	;
+		}
 	}
 
 	void DeleteTiles() {
@@ -37,12 +58,14 @@ public class Level : MonoBehaviour {
 	}
 
 
-
 	void SpawnTile(GameObject tile, Position position) {
 		
 		GameObject tileClone = (GameObject) Instantiate (tile, new Vector3 (position.x, position.y, 0), transform.rotation);
 		tileClone.transform.parent = transform;
 	}
+
+
+
 
 	void GenerateModel() {
 		tiles = new string[size.width, size.height];
@@ -82,16 +105,21 @@ public class Level : MonoBehaviour {
 
 
 	void Render() {
+		RenderTiles ();
+	}
+
+	void RenderTiles() {
 		for (int x = 0; x < tiles.GetLength(0); x++) {
 			for (int y = 0; y < tiles.GetLength(1); y++) {
 
 				string tileName = tiles [x, y];
 				GameObject tile = TileForName(tileName);
-				 
+
 				SpawnTile(tile, new Position(x, y));
 			}
 		}
 	}
+		
 
 	GameObject TileForName(string name) {
 		
