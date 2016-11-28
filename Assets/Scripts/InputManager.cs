@@ -7,6 +7,8 @@ public class InputManager : MonoBehaviour {
 
 
 
+
+	private bool enemyInRange;
 	private bool IsPointerOverUIObject() {
 		PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
 		eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
@@ -33,6 +35,8 @@ public class InputManager : MonoBehaviour {
 	void Update () {
 
 		GameObject player = GameObject.FindWithTag ("Player");
+		GameObject enemy = GameObject.FindWithTag ("Enemy");
+
 
 		foreach(var keymap in directionKeymaps) {
 			if (Input.GetKeyDown (keymap.Key)) {
@@ -46,17 +50,34 @@ public class InputManager : MonoBehaviour {
 
 			// Read as: If the poiter is NOT on a UI element
 			if (!IsPointerOverUIObject()) {
-			
+
 				// Get Player and mouse click
 				Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+				// Check whether enemy is in range (not properly working)
+				float deltaX = player.transform.position.x - enemy.transform.position.x;
+				float deltaY = player.transform.position.y - enemy.transform.position.y;
+				if (-1 <= deltaX && deltaX <= 1 && -1 <= deltaY && deltaY <= 1) {
+					enemyInRange = true;
+				} 
+				else {
+					enemyInRange = false;
+				}
+				// Check clicking on enemy and tell if enemy in range
+				if (Mathf.RoundToInt (ray.origin.x) == enemy.transform.position.x && Mathf.RoundToInt (ray.origin.y) == enemy.transform.position.y) {
+					if (enemyInRange) {
+						Debug.Log ("in range");
+					} else {
+						Debug.Log ("out of range");
+					}
+				} else {
+					// Calculate Direction
+					int dx = Mathf.RoundToInt (ray.origin.x - player.transform.position.x);
+					int dy = Mathf.RoundToInt (ray.origin.y - player.transform.position.y);
+					Direction? direction = new Vector (dx, dy).ToDirection ();
 
-				// Calculate Direction
-				int dx = Mathf.RoundToInt(ray.origin.x - player.transform.position.x);
-				int dy = Mathf.RoundToInt(ray.origin.y - player.transform.position.y);
-				Direction? direction = new Vector (dx, dy).ToDirection ();
-
-				if (direction.HasValue) {
-					player.GetComponent<Player> ().Move (direction.Value);
+					if (direction.HasValue) {
+						player.GetComponent<Player> ().Move (direction.Value);
+					}
 				}
 
 			}
