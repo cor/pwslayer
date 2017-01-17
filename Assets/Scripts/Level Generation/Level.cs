@@ -9,7 +9,7 @@ public class Level : MonoBehaviour {
 
 	public bool customGenerationEnabled = true;
 
-	public Room[] rooms;
+	public List<Room> rooms = new List<Room>();
 	public EnemyDefinition[] enemyDefinitions;
 
 	public GameObject voidTile;
@@ -27,6 +27,9 @@ public class Level : MonoBehaviour {
 	public Size maximumRoomSize = new Size(10, 10);
 
 
+	public int minimumTunnelLength = 5;
+	public int maximumTunnelLength = 20;
+
 	// Use this for initialization
 	void Start () {
 		Generate ();
@@ -41,7 +44,9 @@ public class Level : MonoBehaviour {
 		if (customGenerationEnabled) {
 			GenerateCustomModel ();
 		} else {
-			GenerateRandomModel ();
+			DeleteRooms();
+			GenerateRandomModel();
+			AddTunnel();
 		}
 		
 		Render ();
@@ -74,9 +79,12 @@ public class Level : MonoBehaviour {
 		}
 	}
 
+	void DeleteRooms() {
+		rooms = new List<Room>();
+	}
+
 
 	void SpawnTile(GameObject tile, Position position) {
-		
 		GameObject tileClone = (GameObject) Instantiate (tile, new Vector3 (position.x, position.y, 0), transform.rotation);
 		tileClone.transform.parent = transform;
 	}
@@ -95,8 +103,8 @@ public class Level : MonoBehaviour {
 	}
 
 	void GenerateCustomModel() {
-		for (int i = 0; i < rooms.GetLength(0); i++) {
-			AddRoomToModel (rooms[i]);	
+		for (int i = 0; i < rooms.Count; i++) {
+			AddRoomToModel (rooms[i]);
 		}
 	}
 
@@ -105,8 +113,87 @@ public class Level : MonoBehaviour {
 		Size firstRoomSize = new Size(Random.Range(minimumRoomSize.width, maximumRoomSize.width), Random.Range(minimumRoomSize.height, maximumRoomSize.height));
 		Position firstRoomPosition = new Position((size.width / 2) - (firstRoomSize.width / 2), (size.height / 2) - (firstRoomSize.height / 2));
 		Room firstRoom = new Room(firstRoomPosition, firstRoomSize);
+
+		rooms.Add(firstRoom);
 		AddRoomToModel(firstRoom);
 
+	}
+
+	void AddTunnel() {
+		Room randomRoom = rooms[Random.Range(0, rooms.Count - 1)];
+		
+		List<Opening> wallOpenings = new List<Opening>();
+
+
+		// Get all horizontal wall tiles (excluding corners by going from 1 to width -1)
+		for (int i = 1; i < randomRoom.size.width - 1; i++) {
+			Position southWallTilePosition = new Position(randomRoom.position.x + i, randomRoom.position.y);
+			Position northWallTilePosition = new Position(randomRoom.position.x + i, randomRoom.position.y + randomRoom.size.height - 1);
+			
+			wallOpenings.Add(new Opening(northWallTilePosition, Direction.North));
+			wallOpenings.Add(new Opening(southWallTilePosition, Direction.South));
+		}
+
+		for (int i = 1; i < randomRoom.size.height - 1; i++) {
+			Position westWallTilePosition = new Position(randomRoom.position.x, randomRoom.position.y + i);
+			Position eastWallTilePosition = new Position(randomRoom.position.x + randomRoom.size.width - 1, randomRoom.position.y + i);
+			
+			wallOpenings.Add(new Opening(eastWallTilePosition, Direction.East));
+			wallOpenings.Add(new Opening(westWallTilePosition, Direction.West));
+		}
+
+		Opening randomWallOpening = wallOpenings[Random.Range(0, wallOpenings.Count - 1)];
+
+		tiles[randomWallOpening.position.x, randomWallOpening.position.y] = "ground";
+
+		int tunnelLength = Random.Range(minimumTunnelLength, maximumTunnelLength);
+		for (int i = 1; i < tunnelLength; i++)
+		{
+			switch (randomWallOpening.direction)
+			{
+				case Direction.North:
+				//path
+				tiles[randomWallOpening.position.x, randomWallOpening.position.y + i] = "ground";
+
+				//walls
+				tiles[randomWallOpening.position.x + 1, randomWallOpening.position.y + i] = "wall";
+				tiles[randomWallOpening.position.x - 1, randomWallOpening.position.y + i] = "wall";
+				
+				break;
+				
+				case Direction.East:
+				//path
+				tiles[randomWallOpening.position.x + i, randomWallOpening.position.y] = "ground";
+
+				//walls
+				tiles[randomWallOpening.position.x + i, randomWallOpening.position.y + 1] = "wall";
+				tiles[randomWallOpening.position.x + i, randomWallOpening.position.y - 1] = "wall";
+				break;
+				
+				case Direction.South:
+				//path
+				tiles[randomWallOpening.position.x, randomWallOpening.position.y - i] = "ground";
+
+				//walls
+				tiles[randomWallOpening.position.x + 1, randomWallOpening.position.y - i] = "wall";
+				tiles[randomWallOpening.position.x - 1, randomWallOpening.position.y - i] = "wall";
+				break;
+				
+				case Direction.West:
+				//path
+				tiles[randomWallOpening.position.x - i, randomWallOpening.position.y] = "ground";
+
+				//walls
+				tiles[randomWallOpening.position.x - i, randomWallOpening.position.y + 1] = "wall";
+				tiles[randomWallOpening.position.x - i, randomWallOpening.position.y - 1] = "wall";
+				break;
+
+				default:
+				Debug.LogError("Tunnel's can't be made in diagonal directions");
+				break;
+			}
+		}
+		
 	}
 
 	void AddRoomToModel(Room room) {
