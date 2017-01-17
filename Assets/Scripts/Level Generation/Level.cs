@@ -4,7 +4,10 @@ using System.Collections.Generic;
 
 public class Level : MonoBehaviour {
 
+
 	public Size size;
+
+	public bool customGenerationEnabled = true;
 
 	public Room[] rooms;
 	public EnemyDefinition[] enemyDefinitions;
@@ -13,13 +16,16 @@ public class Level : MonoBehaviour {
 	public GameObject groundTile;
 	public GameObject wallTile;
 	public GameObject doorTile;
-
 	public GameObject slime;
 
 	public bool shouldAutoUpdate;
-
 	string[,] tiles;
 	List<GameObject> enemies = new List<GameObject>();
+
+
+	public Size minimumRoomSize = new Size(4, 4);
+	public Size maximumRoomSize = new Size(10, 10);
+
 
 	// Use this for initialization
 	void Start () {
@@ -29,10 +35,20 @@ public class Level : MonoBehaviour {
 	public void Generate() {
 
 		DeleteTiles ();
+		
+		CreateEmptyModel();
 
-		GenerateModel ();
+		if (customGenerationEnabled) {
+			GenerateCustomModel ();
+		} else {
+			GenerateRandomModel ();
+		}
+		
 		Render ();
-		AddEnemiesFromEnemyDefinitions ();
+
+		if (customGenerationEnabled) {
+			AddEnemiesFromEnemyDefinitions ();
+		}
 
 	}
 		
@@ -48,6 +64,7 @@ public class Level : MonoBehaviour {
 			slime.GetComponent<Enemy> ().position = enemyPosition;
 
 			enemies.Add(enemyClone)	;
+			
 		}
 	}
 
@@ -67,7 +84,7 @@ public class Level : MonoBehaviour {
 
 
 
-	void GenerateModel() {
+	void CreateEmptyModel() {
 		tiles = new string[size.width, size.height];
 
 		for (int x = 0; x < tiles.GetLength(0); x++) {
@@ -75,10 +92,20 @@ public class Level : MonoBehaviour {
 				tiles [x, y] = "void";
 			}
 		}
+	}
 
+	void GenerateCustomModel() {
 		for (int i = 0; i < rooms.GetLength(0); i++) {
 			AddRoomToModel (rooms[i]);	
 		}
+	}
+
+	void GenerateRandomModel() {
+
+		Size firstRoomSize = new Size(Random.Range(minimumRoomSize.width, maximumRoomSize.width), Random.Range(minimumRoomSize.height, maximumRoomSize.height));
+		Position firstRoomPosition = new Position((size.width / 2) - (firstRoomSize.width / 2), (size.height / 2) - (firstRoomSize.height / 2));
+		Room firstRoom = new Room(firstRoomPosition, firstRoomSize);
+		AddRoomToModel(firstRoom);
 
 	}
 

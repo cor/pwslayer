@@ -14,7 +14,7 @@ public class LevelEditor : Editor {
 			}
 		}
 
-		if(GUILayout.Button("Generate")) {
+		if (GUILayout.Button("Generate")) {
 			level.Generate();
 		}
 	}
