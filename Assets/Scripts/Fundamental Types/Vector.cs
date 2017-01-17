@@ -16,6 +16,11 @@ public struct Vector
 	{
 		return new Vector(v1.dx + v2.dx, v1.dy + v2.dy);
 	}
+	
+	public static Vector operator -(Vector v1, Vector v2) 
+	{
+		return new Vector(v1.dx - v2.dx, v1.dy - v2.dy);
+	}
 
 	public Direction? ToDirection() {
 		if (dx == 0 && dy > 0)

@@ -15,4 +15,9 @@ public struct Position {
 	{
 		return new Position(p.x + v.dx, p.y + v.dy);
 	}
+	
+	public static Position operator -(Position p, Vector v) 
+	{
+		return new Position(p.x - v.dx, p.y - v.dy);
+	}
 }

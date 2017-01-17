@@ -12,6 +12,7 @@ public class Level : MonoBehaviour {
 
 	public List<Room> rooms = new List<Room>();
 	public List<Tunnel> tunnels = new List<Tunnel>();
+	public List<Opening> openingPossibilities =  new List<Opening>();
 	public List<Opening> openings = new List<Opening>();
 	public List<EnemyDefinition> enemyDefinitions = new List<EnemyDefinition>();
 
@@ -85,6 +86,7 @@ public class Level : MonoBehaviour {
 	
 	void ClearModel() {
 		DeleteRooms();
+		DeleteOpeningPossibilities();
 		DeleteOpenings();
 		DeleteTunnels();
 		DeleteEnemyDefinitions();
@@ -95,6 +97,10 @@ public class Level : MonoBehaviour {
 	
 	void DeleteTunnels() {
 		tunnels = new List<Tunnel>();
+	}
+
+	void DeleteOpeningPossibilities() {
+		openingPossibilities = new List<Opening>();
 	}
 	
 	void DeleteOpenings() {
@@ -135,83 +141,154 @@ public class Level : MonoBehaviour {
 		Room firstRoom = new Room(firstRoomPosition, firstRoomSize);
 
 		rooms.Add(firstRoom);
-		AddRoomToTiles(firstRoom);
-		
-		AddTunnel();
-		foreach (Tunnel tunnel in tunnels)
+		foreach (Room room in rooms)
 		{
-			AddTunnelToTiles(tunnel);
+			AddRoomToTiles(room);
 		}
 		
+		for (int i = 0; i < 5; i++)
+		{
+			RefreshOpeningPossibilities();
+			AddTunnel();
+			foreach (Tunnel tunnel in tunnels)
+			{
+				AddTunnelToTiles(tunnel);
+			}
+			
+		}
+	}
+
+	void RefreshOpeningPossibilities() {
+
+		DeleteOpeningPossibilities();
+		
+		foreach (Room room in rooms) {
+			
+			// Get all horizontal wall tiles (excluding corners by going from 1 to width -1)
+			for (int i = 1; i < room.size.width - 1; i++) {
+				Position southWallTilePosition = new Position(room.position.x + i, room.position.y);
+				Position northWallTilePosition = new Position(room.position.x + i, room.position.y + room.size.height - 1);
+				
+				openingPossibilities.Add(new Opening(northWallTilePosition, Direction.North));
+				openingPossibilities.Add(new Opening(southWallTilePosition, Direction.South));
+			}
+
+			for (int i = 1; i < room.size.height - 1; i++) {
+				Position westWallTilePosition = new Position(room.position.x, room.position.y + i);
+				Position eastWallTilePosition = new Position(room.position.x + room.size.width - 1, room.position.y + i);
+				
+				openingPossibilities.Add(new Opening(eastWallTilePosition, Direction.East));
+				openingPossibilities.Add(new Opening(westWallTilePosition, Direction.West));
+			}
+				
+		}
+		
+		// Please refactor me, I'm not DRY
+		foreach (Tunnel tunnel in tunnels) {
+			switch (tunnel.direction)
+			{
+				case Direction.North:
+				for (int i = 1; i < tunnel.length - 1; i++) {
+					Position eastWallTilePosition = new Position(tunnel.position.x + 1, tunnel.position.y + i);
+					Position westWallTilePosition = new Position(tunnel.position.x - 1, tunnel.position.y + i);
+
+					openingPossibilities.Add(new Opening(eastWallTilePosition, Direction.East));
+					openingPossibilities.Add(new Opening(westWallTilePosition, Direction.West));
+				}
+				break;
+
+				case Direction.East:
+				for (int i = 1; i < tunnel.length - 1; i++) {
+					Position northWallTilePosition = new Position(tunnel.position.x + i, tunnel.position.y + 1);
+					Position southWallTilePosition = new Position(tunnel.position.x + i, tunnel.position.y - 1);
+
+					openingPossibilities.Add(new Opening(northWallTilePosition, Direction.North));
+					openingPossibilities.Add(new Opening(southWallTilePosition, Direction.South));
+				}
+				break;
+				
+				case Direction.South:
+				for (int i = 1; i < tunnel.length - 1; i++) {
+					Position eastWallTilePosition = new Position(tunnel.position.x + 1, tunnel.position.y - i);
+					Position westWallTilePosition = new Position(tunnel.position.x - 1, tunnel.position.y - i);
+
+					openingPossibilities.Add(new Opening(eastWallTilePosition, Direction.East));
+					openingPossibilities.Add(new Opening(westWallTilePosition, Direction.West));
+				}
+				break;
+				
+				case Direction.West:
+				for (int i = 1; i < tunnel.length - 1; i++) {
+					Position northWallTilePosition = new Position(tunnel.position.x - i, tunnel.position.y + 1);
+					Position southWallTilePosition = new Position(tunnel.position.x - i, tunnel.position.y - 1);
+
+					openingPossibilities.Add(new Opening(northWallTilePosition, Direction.North));
+					openingPossibilities.Add(new Opening(southWallTilePosition, Direction.South));
+				}
+				break;
+				
+				default:
+				Debug.LogError("Tunnel's can't be made in diagonal directions");
+				break;
+			}
+		}
 
 	}
 
 	void AddTunnel() {
-		Room randomRoom = rooms[Random.Range(0, rooms.Count - 1)];
-		
-		List<Opening> wallOpenings = new List<Opening>();
 
+		bool addedTunnel = false;
 
-		// Get all horizontal wall tiles (excluding corners by going from 1 to width -1)
-		for (int i = 1; i < randomRoom.size.width - 1; i++) {
-			Position southWallTilePosition = new Position(randomRoom.position.x + i, randomRoom.position.y);
-			Position northWallTilePosition = new Position(randomRoom.position.x + i, randomRoom.position.y + randomRoom.size.height - 1);
+		// Keep trying to add a tunnel
+		do {
+
+			Opening randomOpeningPossibility = openingPossibilities[Random.Range(0, openingPossibilities.Count)];
+
+			int tunnelLength = Random.Range(minimumTunnelLength, maximumTunnelLength);
+
+			Size tunnelSize;
+			Vector tunnelRectPositionDelta;
+
+			switch (randomOpeningPossibility.direction)
+			{
+				case Direction.North:
+				tunnelSize = new Size(3, tunnelLength);
+				tunnelRectPositionDelta = new Vector(-1, +1);
+				break;
+				
+				case Direction.East:
+				tunnelSize = new Size(tunnelLength, 3);
+				tunnelRectPositionDelta = new Vector(+1, -1);
+				break;
+				
+				case Direction.South:
+				tunnelSize = new Size(3, tunnelLength);
+				tunnelRectPositionDelta = new Vector(-1, -(tunnelSize.height));
+				break;
+				
+				case Direction.West:	
+				tunnelSize = new Size(tunnelLength, 3);
+				tunnelRectPositionDelta = new Vector(-(tunnelSize.width), -1);
+				break;
+				
+				default:
+				Debug.LogError("Tunnel's can't be made in diagonal directions");
+				tunnelSize = new Size(0,0);
+				tunnelRectPositionDelta = new Vector(0,0);
+				break;
+			}
 			
-			wallOpenings.Add(new Opening(northWallTilePosition, Direction.North));
-			wallOpenings.Add(new Opening(southWallTilePosition, Direction.South));
-		}
-
-		for (int i = 1; i < randomRoom.size.height - 1; i++) {
-			Position westWallTilePosition = new Position(randomRoom.position.x, randomRoom.position.y + i);
-			Position eastWallTilePosition = new Position(randomRoom.position.x + randomRoom.size.width - 1, randomRoom.position.y + i);
+			if (RectangleAreaIsEmpty(new RectangleArea(randomOpeningPossibility.position + tunnelRectPositionDelta, tunnelSize))) {
+				tunnels.Add(new Tunnel(randomOpeningPossibility.position + randomOpeningPossibility.direction.ToVector(), tunnelLength, randomOpeningPossibility.direction));
+				
+				addedTunnel = true;
+			}
 			
-			wallOpenings.Add(new Opening(eastWallTilePosition, Direction.East));
-			wallOpenings.Add(new Opening(westWallTilePosition, Direction.West));
-		}
+		} while(!addedTunnel);
 
-		Opening randomWallOpening = wallOpenings[Random.Range(0, wallOpenings.Count - 1)];
-
-		tiles[randomWallOpening.position.x, randomWallOpening.position.y] = "ground";
-
-		int tunnelLength = Random.Range(minimumTunnelLength, maximumTunnelLength);
-
-		Size tunnelSize;
-		Vector tunnelRectPositionDelta;
-
-		switch (randomWallOpening.direction)
-		{
-			case Direction.North:
-			tunnelSize = new Size(3, tunnelLength);
-			tunnelRectPositionDelta = new Vector(-1, +1);
-			break;
-			
-			case Direction.East:
-			tunnelSize = new Size(tunnelLength, 3);
-			tunnelRectPositionDelta = new Vector(+1, -1);
-			break;
-			
-			case Direction.South:
-			tunnelSize = new Size(3, tunnelLength);
-			tunnelRectPositionDelta = new Vector(-1, -(tunnelSize.height));
-			break;
-			
-			case Direction.West:	
-			tunnelSize = new Size(tunnelLength, 3);
-			tunnelRectPositionDelta = new Vector(-(tunnelSize.width), -1);
-			break;
-			
-			default:
-			Debug.LogError("Tunnel's can't be made in diagonal directions");
-			tunnelSize = new Size(0,0);
-			tunnelRectPositionDelta = new Vector(0,0);
-			break;
-		}
-
-		if (RectangleAreaIsEmpty(new RectangleArea(randomWallOpening.position + tunnelRectPositionDelta, tunnelSize))) {
-			tunnels.Add(new Tunnel(randomWallOpening.position + randomWallOpening.direction.ToVector(), tunnelLength, randomWallOpening.direction));
-		}
-		
 	}
+
+
 	void AddRoomToTiles(Room room) {
 		// Place ground everywhere
 		for (int x = 0; x < room.size.width; x++) {
@@ -233,6 +310,10 @@ public class Level : MonoBehaviour {
 	}
 
 	void AddTunnelToTiles(Tunnel tunnel) {
+
+		Position openingPosition = tunnel.position - tunnel.direction.ToVector();
+		
+		tiles[openingPosition.x, openingPosition.y] = "ground";
 		for (int i = 0; i < tunnel.length; i++) {
 			{
 				switch (tunnel.direction)
