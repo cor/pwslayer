@@ -147,7 +147,7 @@ public class Level : MonoBehaviour {
 		tiles[randomWallOpening.position.x, randomWallOpening.position.y] = "ground";
 
 		int tunnelLength = Random.Range(minimumTunnelLength, maximumTunnelLength);
-		Debug.Log(tunnelLength);
+
 		Size tunnelSize;
 		Vector tunnelPositionDelta;
 
@@ -165,12 +165,12 @@ public class Level : MonoBehaviour {
 			
 			case Direction.South:
 			tunnelSize = new Size(3, tunnelLength);
-			tunnelPositionDelta = new Vector(-1, -(tunnelSize.height + 1));
+			tunnelPositionDelta = new Vector(-1, -(tunnelSize.height));
 			break;
 			
 			case Direction.West:	
 			tunnelSize = new Size(tunnelLength, 3);
-			tunnelPositionDelta = new Vector(-(tunnelSize.width + 1), -1);
+			tunnelPositionDelta = new Vector(-(tunnelSize.width), -1);
 			break;
 			
 			default:
@@ -181,44 +181,44 @@ public class Level : MonoBehaviour {
 		}
 
 		if (RectangleAreaIsEmpty(new RectangleArea(randomWallOpening.position + tunnelPositionDelta, tunnelSize))) {
-			for (int i = 1; i < tunnelLength; i++)
+			for (int i = 0; i < tunnelLength; i++)
 			{
 				switch (randomWallOpening.direction)
 				{
 					case Direction.North:
 					//path
-					tiles[randomWallOpening.position.x, randomWallOpening.position.y + i] = "ground";
+					tiles[randomWallOpening.position.x, randomWallOpening.position.y + i + 1] = "ground";
 
 					//walls
-					tiles[randomWallOpening.position.x + 1, randomWallOpening.position.y + i] = "wall";
-					tiles[randomWallOpening.position.x - 1, randomWallOpening.position.y + i] = "wall";
+					tiles[randomWallOpening.position.x + 1, randomWallOpening.position.y + i + 1] = "wall";
+					tiles[randomWallOpening.position.x - 1, randomWallOpening.position.y + i + 1] = "wall";
 					break;
 					
 					case Direction.East:
 					//path
-					tiles[randomWallOpening.position.x + i, randomWallOpening.position.y] = "ground";
+					tiles[randomWallOpening.position.x + i + 1, randomWallOpening.position.y] = "ground";
 
 					//walls
-					tiles[randomWallOpening.position.x + i, randomWallOpening.position.y + 1] = "wall";
-					tiles[randomWallOpening.position.x + i, randomWallOpening.position.y - 1] = "wall";
+					tiles[randomWallOpening.position.x + i + 1, randomWallOpening.position.y + 1] = "wall";
+					tiles[randomWallOpening.position.x + i + 1, randomWallOpening.position.y - 1] = "wall";
 					break;
 					
 					case Direction.South:
 					//path
-					tiles[randomWallOpening.position.x, randomWallOpening.position.y - i] = "ground";
+					tiles[randomWallOpening.position.x, randomWallOpening.position.y - i - 1] = "ground";
 
 					//walls
-					tiles[randomWallOpening.position.x + 1, randomWallOpening.position.y - i] = "wall";
-					tiles[randomWallOpening.position.x - 1, randomWallOpening.position.y - i] = "wall";
+					tiles[randomWallOpening.position.x + 1, randomWallOpening.position.y - i - 1] = "wall";
+					tiles[randomWallOpening.position.x - 1, randomWallOpening.position.y - i - 1] = "wall";
 					break;
 					
 					case Direction.West:
 					//path
-					tiles[randomWallOpening.position.x - i, randomWallOpening.position.y] = "ground";
+					tiles[randomWallOpening.position.x - i - 1, randomWallOpening.position.y] = "ground";
 
 					//walls
-					tiles[randomWallOpening.position.x - i, randomWallOpening.position.y + 1] = "wall";
-					tiles[randomWallOpening.position.x - i, randomWallOpening.position.y - 1] = "wall";
+					tiles[randomWallOpening.position.x - i - 1, randomWallOpening.position.y + 1] = "wall";
+					tiles[randomWallOpening.position.x - i - 1, randomWallOpening.position.y - 1] = "wall";
 					break;
 
 					default:
