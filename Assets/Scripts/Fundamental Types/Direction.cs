@@ -56,4 +56,45 @@ public static class DirectionMethods
 
 		return new Vector (dx, dy);
 	}
+
+	public static Direction Inverted(this Direction direction) {
+		switch (direction)
+		{
+		case Direction.North:
+		return Direction.South;
+		break;
+
+		case Direction.NorthEast:
+		return Direction.SouthWest;
+		break;
+		
+		case Direction.East:
+		return Direction.West;
+		break;
+		
+		case Direction.SouthEast:
+		return Direction.NorthWest;
+		break;
+		
+		case Direction.South:
+		return Direction.North;
+		break;
+		
+		case Direction.SouthWest:
+		return Direction.NorthEast;
+		break;
+			
+		case Direction.West:
+		return Direction.East;
+		break;
+		
+		case Direction.NorthWest:
+		return Direction.SouthEast;
+		break;
+
+		default:
+		return Direction.North;
+		break;
+		}
+	}
 }

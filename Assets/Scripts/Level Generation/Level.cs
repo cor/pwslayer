@@ -13,7 +13,7 @@ public class Level : MonoBehaviour {
 	public List<Room> rooms = new List<Room>();
 	public List<Tunnel> tunnels = new List<Tunnel>();
 	public List<Opening> openingPossibilities =  new List<Opening>();
-	public List<Opening> openings = new List<Opening>();
+	public List<Opening> usedOpenings = new List<Opening>();
 	public List<EnemyDefinition> enemyDefinitions = new List<EnemyDefinition>();
 
 	public GameObject voidTile;
@@ -72,7 +72,7 @@ public class Level : MonoBehaviour {
 			enemyClone.transform.parent = transform;
 			slime.GetComponent<Enemy> ().position = enemyPosition;
 
-			enemies.Add(enemyClone)	;
+			enemies.Add(enemyClone);
 			
 		}
 	}
@@ -87,7 +87,7 @@ public class Level : MonoBehaviour {
 	void ClearModel() {
 		DeleteRooms();
 		DeleteOpeningPossibilities();
-		DeleteOpenings();
+		DelteUsedOpenings();
 		DeleteTunnels();
 		DeleteEnemyDefinitions();
 	}
@@ -103,8 +103,8 @@ public class Level : MonoBehaviour {
 		openingPossibilities = new List<Opening>();
 	}
 	
-	void DeleteOpenings() {
-		openings = new List<Opening>();
+	void DelteUsedOpenings() {
+		usedOpenings = new List<Opening>();
 	}
 
 	void DeleteEnemyDefinitions() {
@@ -146,7 +146,7 @@ public class Level : MonoBehaviour {
 			AddRoomToTiles(room);
 		}
 		
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < 4; i++)
 		{
 			RefreshOpeningPossibilities();
 			AddTunnel();
@@ -155,7 +155,20 @@ public class Level : MonoBehaviour {
 				AddTunnelToTiles(tunnel);
 			}
 			
+			RefreshOpeningPossibilities();
+			AddRoom();
+			foreach (Room room in rooms)
+			{
+				AddRoomToTiles(room);
+			}
+
+			foreach (Opening usedOpening in usedOpenings) 
+			{
+				AddUsedOpeningToTiles(usedOpening);
+			}
+			
 		}
+
 	}
 
 	void RefreshOpeningPossibilities() {
@@ -278,14 +291,66 @@ public class Level : MonoBehaviour {
 				break;
 			}
 			
-			if (RectangleAreaIsEmpty(new RectangleArea(randomOpeningPossibility.position + tunnelRectPositionDelta, tunnelSize))) {
+			RectangleArea tunnelArea = new RectangleArea(randomOpeningPossibility.position + tunnelRectPositionDelta, tunnelSize);
+
+			if (RectangleAreaIsEmpty(tunnelArea)) {
 				tunnels.Add(new Tunnel(randomOpeningPossibility.position + randomOpeningPossibility.direction.ToVector(), tunnelLength, randomOpeningPossibility.direction));
-				
+				usedOpenings.Add(randomOpeningPossibility);
 				addedTunnel = true;
 			}
 			
 		} while(!addedTunnel);
 
+	}
+
+	void AddRoom() {
+
+		bool addedRoom = false;
+
+		do {
+			Opening randomOpeningPossibility = openingPossibilities[Random.Range(0, openingPossibilities.Count)];
+
+			Position openingPosition = randomOpeningPossibility.position;
+			Direction openingDirection = randomOpeningPossibility.direction;
+
+			Size roomSize = new Size(Random.Range(minimumRoomSize.width, maximumRoomSize.width), Random.Range(minimumRoomSize.height, maximumRoomSize.height));
+			Position roomPosition;
+
+			switch (randomOpeningPossibility.direction) {
+				case Direction.North:
+				roomPosition = new Position(openingPosition.x - (roomSize.width / 2), openingPosition.y + 1);
+				break;
+
+				case Direction.East:
+				roomPosition = new Position(openingPosition.x + 1, openingPosition.y - (roomSize.height / 2));
+				break;
+
+				case Direction.South:
+				roomPosition = new Position(openingPosition.x - (roomSize.width / 2), openingPosition.y - roomSize.height);
+
+				break;
+
+				case Direction.West:
+				roomPosition = new Position(openingPosition.x - roomSize.width, openingPosition.y - (roomSize.height / 2));
+				break;
+
+				default:
+				Debug.LogError("Openings's can't be made in diagonal directions");
+				roomPosition = new Position(-1, -1);
+				break;
+			}
+
+			RectangleArea roomArea = new RectangleArea(roomPosition, roomSize);
+
+			if (RectangleAreaIsEmpty(roomArea)) {
+				rooms.Add(new Room(roomPosition, roomSize));
+				usedOpenings.Add(randomOpeningPossibility);
+				usedOpenings.Add(new Opening(openingPosition + openingDirection.ToVector(), openingDirection.Inverted()));
+				addedRoom = true;
+			}
+
+		} while(!addedRoom);
+		
 	}
 
 
@@ -307,6 +372,10 @@ public class Level : MonoBehaviour {
 			tiles [room.position.x + 0, room.position.y + y] = "wall";
 			tiles [room.position.x + (room.size.width - 1), room.position.y + y] = "wall"; 
 		}
+	}
+
+	void AddUsedOpeningToTiles(Opening usedOpening) {
+		tiles[usedOpening.position.x, usedOpening.position.y] = "ground";
 	}
 
 	void AddTunnelToTiles(Tunnel tunnel) {
@@ -389,27 +458,6 @@ public class Level : MonoBehaviour {
 				 position.y < tiles.GetLowerBound(1) ||
  				 position.y > tiles.GetUpperBound(1));
 	}
-
-	void AddRoomToModel(Room room) {
-		// Place ground everywhere
-		for (int x = 0; x < room.size.width; x++) {
-			for (int y = 0; y < room.size.height; y++) {
-				tiles [room.position.x + x, room.position.y + y] = "ground";
-			}
-		}
-
-		//Replace the outer rows with wall
-		for (int x = 0; x < room.size.width; x++) {
-			tiles [room.position.x + x, room.position.y + 0] = "wall";
-			tiles [room.position.x + x, room.position.y + (room.size.height - 1)] = "wall";
-		}
-
-		for (int y = 0; y < room.size.height; y++) {
-			tiles [room.position.x + 0, room.position.y + y] = "wall";
-			tiles [room.position.x + (room.size.width - 1), room.position.y + y] = "wall"; 
-		}
-	}
-
 
 	void Render() {
 		RenderTiles ();
