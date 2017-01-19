@@ -28,6 +28,11 @@ public class Player: MonoBehaviour {
 		}
 		enemy.AITurn();
 	}
+
+	public void Start() {
+		Level level = GameObject.FindWithTag("Level").GetComponent<Level>();
+		position = new Position(level.size.width / 2, level.size.height / 2);
+	}
 	public void Move (Direction direction) {
 
 		lastMoveDirection = direction;
