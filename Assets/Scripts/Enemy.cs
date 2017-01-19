@@ -52,10 +52,25 @@ public class Enemy : MonoBehaviour{
 				if (level.CanMoveToTile (position + direction.Value.ToVector ())) {
 					position += direction.Value.ToVector ();
 				}
+				else{
+					Direction? newDirection = new Vector (dx, 0).ToDirection ();
+					if (newDirection.HasValue) {
+						if (level.CanMoveToTile (position + newDirection.Value.ToVector ())) {
+							position += newDirection.Value.ToVector ();
+						}
+						else{
+							Direction? newerDirection = new Vector (0, dy).ToDirection ();
+							if (newerDirection.HasValue) {
+								if (level.CanMoveToTile (position + newerDirection.Value.ToVector ())) {
+									position += newerDirection.Value.ToVector ();
+								}
+							}
+						}
+					}
+				}		
 			}
 		}
 	}
-    
 
     void Update()
     {
