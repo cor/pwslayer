@@ -66,8 +66,6 @@ public class Level : MonoBehaviour {
 	void AddEnemiesFromEnemyDefinitions() {
 		for (int i = 0; i < enemyDefinitions.Count; i++) {
 
-			Debug.Log ("Add enemy");
-
 			Position enemyPosition = enemyDefinitions [i].position;
 
 			GameObject enemyClone = (GameObject)Instantiate (slime, new Vector3 (enemyPosition.x, enemyPosition.y, -1), transform.rotation);
