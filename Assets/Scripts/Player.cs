@@ -7,7 +7,7 @@ public class Player: MonoBehaviour {
 
 	public Position position;
 	public bool flipped;
-
+	public int healthPoints;
 	// Animation
 	public float smoothTime = 0.3f;
 	private Vector3 velocity = Vector3.zero;
@@ -29,6 +29,8 @@ public class Player: MonoBehaviour {
 				enemy.SetActive(false);
 			}
 		}
+		Enemy enemies = GameObject.FindWithTag ("Enemy").GetComponent <Enemy>();
+		enemies.AITurn ();
 
 	}
 				

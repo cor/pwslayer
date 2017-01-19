@@ -7,29 +7,58 @@ public class Enemy : MonoBehaviour{
     public Position position;
     public bool flipped;
     public int healthPoints;
-
+	public int atkDmg;
+	public int critChance;
+	private int randCrit;
+	private int rand;
     // Animation
     public float smoothTime = 0.3f;
     private Vector3 velocity = Vector3.zero;
     private Direction lastMoveDirection = Direction.North;
 
+	//AITurn options
+	private int dx;
+	private int dy;
+	public bool playerInRange(){
+		Player player = GameObject.Find("player").GetComponent<Player>();
+		if ((player.position.x - position.x)<= 1 && (player.position.x - position.x)>= -1 && (player.position.y - position.y)<= 1 && (player.position.y - position.y) >= -1) {			
+			return true;
 
-    public void Move(Direction direction)
-    {
+		} else {			
+			return false;
 
-        lastMoveDirection = direction;
+		}
+	}
 
-        Level level = GameObject.FindWithTag("Level").GetComponent<Level>();
-
-        if (level.CanMoveToTile(position + direction.ToVector()))
-        {
-            position += direction.ToVector();
-        }
-    }
+	public void AITurn()
+	{
+		Player player = GameObject.Find ("player").GetComponent<Player> ();
+		if (playerInRange ()) { //attack
+			Debug.Log ("In range");
+			randCrit = Random.Range (0, 101); //random int to determine Crit
+			rand = Random.Range (-1, 1); //random int to not have weapons deal set dmg
+			if (randCrit <= critChance) { //deal critical dmg to player
+				player.healthPoints = player.healthPoints - (atkDmg * 2) - rand;
+			} else { //deal normal dmg to player
+				player.healthPoints = player.healthPoints - atkDmg - rand;
+			}
+		} else { //move towards player
+			Debug.Log ("Out of range");
+			dx = player.position.x - position.x;
+			dy = player.position.y - position.y;
+			Direction? direction = new Vector (dx, dy).ToDirection ();
+			Level level = GameObject.FindWithTag ("Level").GetComponent<Level> ();
+			if (direction.HasValue) {
+				if (level.CanMoveToTile (position + direction.Value.ToVector ())) {
+					position += direction.Value.ToVector ();
+				}
+			}
+		}
+	}
+    
 
     void Update()
     {
-
         Render();
     }
 
