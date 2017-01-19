@@ -10,7 +10,7 @@ public class Player: MonoBehaviour {
 	public int healthPoints;
 	public int attackDamage;
 	private int randomCrit;
-	private int critChance;
+	public int critChance;
 	private int random;
 	// Animation
 	public float smoothTime = 0.3f;
@@ -43,11 +43,25 @@ public class Player: MonoBehaviour {
 			
 			position += direction.ToVector ();
 
-			GameObject enemy = level.EnemyIsOnTile (position);
-			if (enemy != null) {
-				enemy.SetActive(false);
-			}
+			
 		}
+		else{
+				
+				Direction? newDirection = new Vector (direction.ToVector().dx, 0).ToDirection ();
+				if (newDirection.HasValue) {
+					if (level.CanMoveToTile (position + newDirection.Value.ToVector ())) {
+						position += newDirection.Value.ToVector ();
+					}
+					else{
+						Direction? newerDirection = new Vector (0, direction.ToVector().dy).ToDirection ();
+						if (newerDirection.HasValue) {
+							if (level.CanMoveToTile (position + newerDirection.Value.ToVector ())) {
+								position += newerDirection.Value.ToVector ();
+							}
+						}
+					}
+				}
+			}
 		level.UpdateEnemies();
 	}
 				
