@@ -6,9 +6,12 @@ public struct Opening {
 	public Position position;
 	public Direction direction;
 
-	public Opening(Position position, Direction direction) {
+	public string connectedTo;
+
+	public Opening(Position position, Direction direction, string connectedTo) {
 		this.position = position;
 		this.direction = direction;
+		this.connectedTo = connectedTo; // ex: "room" or "tunnel"
 	}
 
 }

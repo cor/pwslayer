@@ -10,6 +10,9 @@ public class Level : MonoBehaviour {
 	public Size size;
 
 
+	public int generationCycles;
+
+
 	public List<Room> rooms = new List<Room>();
 	public List<Tunnel> tunnels = new List<Tunnel>();
 	public List<Opening> openingPossibilities =  new List<Opening>();
@@ -146,7 +149,7 @@ public class Level : MonoBehaviour {
 			AddRoomToTiles(room);
 		}
 		
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < generationCycles; i++)
 		{
 			RefreshOpeningPossibilities();
 			AddTunnel();
@@ -182,16 +185,16 @@ public class Level : MonoBehaviour {
 				Position southWallTilePosition = new Position(room.position.x + i, room.position.y);
 				Position northWallTilePosition = new Position(room.position.x + i, room.position.y + room.size.height - 1);
 				
-				openingPossibilities.Add(new Opening(northWallTilePosition, Direction.North));
-				openingPossibilities.Add(new Opening(southWallTilePosition, Direction.South));
+				openingPossibilities.Add(new Opening(northWallTilePosition, Direction.North, "room"));
+				openingPossibilities.Add(new Opening(southWallTilePosition, Direction.South, "room"));
 			}
 
 			for (int i = 1; i < room.size.height - 1; i++) {
 				Position westWallTilePosition = new Position(room.position.x, room.position.y + i);
 				Position eastWallTilePosition = new Position(room.position.x + room.size.width - 1, room.position.y + i);
 				
-				openingPossibilities.Add(new Opening(eastWallTilePosition, Direction.East));
-				openingPossibilities.Add(new Opening(westWallTilePosition, Direction.West));
+				openingPossibilities.Add(new Opening(eastWallTilePosition, Direction.East, "room"));
+				openingPossibilities.Add(new Opening(westWallTilePosition, Direction.West, "room"));
 			}
 				
 		}
@@ -201,43 +204,63 @@ public class Level : MonoBehaviour {
 			switch (tunnel.direction)
 			{
 				case Direction.North:
+
+				// Sides of the tunnel
 				for (int i = 1; i < tunnel.length - 1; i++) {
 					Position eastWallTilePosition = new Position(tunnel.position.x + 1, tunnel.position.y + i);
 					Position westWallTilePosition = new Position(tunnel.position.x - 1, tunnel.position.y + i);
 
-					openingPossibilities.Add(new Opening(eastWallTilePosition, Direction.East));
-					openingPossibilities.Add(new Opening(westWallTilePosition, Direction.West));
+					openingPossibilities.Add(new Opening(eastWallTilePosition, Direction.East, "tunnel"));
+					openingPossibilities.Add(new Opening(westWallTilePosition, Direction.West, "tunnel"));
 				}
+
+				// End of the tunnel
+				openingPossibilities.Add(new Opening(new Position(tunnel.position.x, tunnel.position.y + tunnel.length - 1), Direction.North, "tunnel"));
 				break;
 
 				case Direction.East:
+
+				// Sides of the tunnel
 				for (int i = 1; i < tunnel.length - 1; i++) {
 					Position northWallTilePosition = new Position(tunnel.position.x + i, tunnel.position.y + 1);
 					Position southWallTilePosition = new Position(tunnel.position.x + i, tunnel.position.y - 1);
 
-					openingPossibilities.Add(new Opening(northWallTilePosition, Direction.North));
-					openingPossibilities.Add(new Opening(southWallTilePosition, Direction.South));
+					openingPossibilities.Add(new Opening(northWallTilePosition, Direction.North, "tunnel"));
+					openingPossibilities.Add(new Opening(southWallTilePosition, Direction.South, "tunnel"));
 				}
+
+				// End of the tunnel
+				openingPossibilities.Add(new Opening(new Position(tunnel.position.x + tunnel.length - 1, tunnel.position.y), Direction.East, "tunnel"));
 				break;
 				
 				case Direction.South:
+
+				// Sides of the tunnel
 				for (int i = 1; i < tunnel.length - 1; i++) {
 					Position eastWallTilePosition = new Position(tunnel.position.x + 1, tunnel.position.y - i);
 					Position westWallTilePosition = new Position(tunnel.position.x - 1, tunnel.position.y - i);
 
-					openingPossibilities.Add(new Opening(eastWallTilePosition, Direction.East));
-					openingPossibilities.Add(new Opening(westWallTilePosition, Direction.West));
+					openingPossibilities.Add(new Opening(eastWallTilePosition, Direction.East, "tunnel"));
+					openingPossibilities.Add(new Opening(westWallTilePosition, Direction.West, "tunnel"));
 				}
+
+				// End of the tunnel
+				openingPossibilities.Add(new Opening(new Position(tunnel.position.x, tunnel.position.y - tunnel.length + 1), Direction.South, "tunnel"));
 				break;
 				
 				case Direction.West:
+
+				// Sides of the tunnel
 				for (int i = 1; i < tunnel.length - 1; i++) {
 					Position northWallTilePosition = new Position(tunnel.position.x - i, tunnel.position.y + 1);
 					Position southWallTilePosition = new Position(tunnel.position.x - i, tunnel.position.y - 1);
 
-					openingPossibilities.Add(new Opening(northWallTilePosition, Direction.North));
-					openingPossibilities.Add(new Opening(southWallTilePosition, Direction.South));
+					openingPossibilities.Add(new Opening(northWallTilePosition, Direction.North, "tunnel"));
+					openingPossibilities.Add(new Opening(southWallTilePosition, Direction.South, "tunnel"));
 				}
+
+				// End of the tunnel
+				openingPossibilities.Add(new Opening(new Position(tunnel.position.x - tunnel.length + 1, tunnel.position.y), Direction.West, "tunnel"));
 				break;
 				
 				default:
@@ -308,7 +331,8 @@ public class Level : MonoBehaviour {
 		bool addedRoom = false;
 
 		do {
-			Opening randomOpeningPossibility = openingPossibilities[Random.Range(0, openingPossibilities.Count)];
+			List<Opening> tunnelOpeningPossibilities = GetOpeningsConnectedTo(openingPossibilities, "tunnel");
+			Opening randomOpeningPossibility = tunnelOpeningPossibilities[Random.Range(0, tunnelOpeningPossibilities.Count)];
 
 			Position openingPosition = randomOpeningPossibility.position;
 			Direction openingDirection = randomOpeningPossibility.direction;
@@ -345,7 +369,7 @@ public class Level : MonoBehaviour {
 			if (RectangleAreaIsEmpty(roomArea)) {
 				rooms.Add(new Room(roomPosition, roomSize));
 				usedOpenings.Add(randomOpeningPossibility);
-				usedOpenings.Add(new Opening(openingPosition + openingDirection.ToVector(), openingDirection.Inverted()));
+				usedOpenings.Add(new Opening(openingPosition + openingDirection.ToVector(), openingDirection.Inverted(), randomOpeningPossibility.connectedTo));
 				addedRoom = true;
 			}
 
@@ -473,6 +497,16 @@ public class Level : MonoBehaviour {
 				SpawnTile(tile, new Position(x, y));
 			}
 		}
+	}
+
+	List<Opening> GetOpeningsConnectedTo(List<Opening> openings, string connectedTo) {
+		List<Opening> foundOpenings = new List<Opening>();
+		foreach (Opening opening in openings) {
+			if (opening.connectedTo == connectedTo) {
+				foundOpenings.Add(opening);
+			}
+		}
+		return foundOpenings;
 	}
 		
 
