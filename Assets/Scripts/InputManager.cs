@@ -6,9 +6,16 @@ using UnityEngine.EventSystems;
 public class InputManager : MonoBehaviour {
 
 
-
-
-	private bool enemyInRange;
+	public Ray ray;
+	public bool ClickedOnEnemy(){
+	Enemy enemy = GameObject.FindWithTag("Enemy").GetComponent<Enemy>();
+		if(Mathf.RoundToInt(ray.origin.x) == enemy.position.x && Mathf.RoundToInt(ray.origin.y) == enemy.position.y){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 	private bool IsPointerOverUIObject() {
 		PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
 		eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
@@ -35,7 +42,7 @@ public class InputManager : MonoBehaviour {
 	void Update () {
 
 		GameObject player = GameObject.FindWithTag ("Player");
-		GameObject enemy = GameObject.FindWithTag ("Enemy");
+		
 
 
 		foreach(var keymap in directionKeymaps) {
@@ -51,8 +58,11 @@ public class InputManager : MonoBehaviour {
 			// Read as: If the poiter is NOT on a UI element
 			if (!IsPointerOverUIObject()) {
 
-				Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-			
+				ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+				if(ClickedOnEnemy()){
+					player.GetComponent<Player> ().Combat ();
+				}
+				else{
 				// Calculate Direction
 				int dx = Mathf.RoundToInt (ray.origin.x - player.transform.position.x);
 				int dy = Mathf.RoundToInt (ray.origin.y - player.transform.position.y);
@@ -61,7 +71,7 @@ public class InputManager : MonoBehaviour {
 				if (direction.HasValue) {
 					player.GetComponent<Player> ().Move (direction.Value);
 				}
-	
+				}
 
 			}
 
