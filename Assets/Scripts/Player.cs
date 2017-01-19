@@ -34,9 +34,7 @@ public class Player: MonoBehaviour {
 				enemy.SetActive(false);
 			}
 		}
-		Enemy enemies = GameObject.FindWithTag ("Enemy").GetComponent <Enemy>();
-		enemies.AITurn ();
-
+		level.UpdateEnemies();
 	}
 				
 	void Update () {

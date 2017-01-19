@@ -9,7 +9,7 @@ public class LevelEditor : Editor {
 		Level level = (Level) target;
 
 		if (DrawDefaultInspector()) {
-			if(level.shouldAutoUpdate) {
+			if(level.shouldAutoUpdate && level.customGenerationEnabled) {
 				level.Generate();
 			}
 		}

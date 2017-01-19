@@ -11,6 +11,7 @@ public class Level : MonoBehaviour {
 
 
 	public int generationCycles;
+	public int enemyCount;
 
 
 	public List<Room> rooms = new List<Room>();
@@ -57,10 +58,8 @@ public class Level : MonoBehaviour {
 		}
 		
 		Render ();
-
-		if (customGenerationEnabled) {
-			AddEnemiesFromEnemyDefinitions ();
-		}
+		
+		AddEnemiesFromEnemyDefinitions ();
 
 	}
 		
@@ -144,13 +143,11 @@ public class Level : MonoBehaviour {
 		Room firstRoom = new Room(firstRoomPosition, firstRoomSize);
 
 		rooms.Add(firstRoom);
-		foreach (Room room in rooms)
-		{
+		foreach (Room room in rooms) {
 			AddRoomToTiles(room);
 		}
 		
-		for (int i = 0; i < generationCycles; i++)
-		{
+		for (int i = 0; i < generationCycles; i++) {
 			RefreshOpeningPossibilities();
 			AddTunnel();
 			foreach (Tunnel tunnel in tunnels)
@@ -170,6 +167,10 @@ public class Level : MonoBehaviour {
 				AddUsedOpeningToTiles(usedOpening);
 			}
 			
+		}
+
+		for (int i = 0; i < enemyCount; i++) {
+			AddEnemyDefinition();
 		}
 
 	}
@@ -326,6 +327,13 @@ public class Level : MonoBehaviour {
 
 	}
 
+	void AddEnemyDefinition() {
+		Room randomRoom = rooms[Random.Range(0, rooms.Count)];
+		Position randomRoomTilePosition = new Position(randomRoom.position.x + 1 + Random.Range(0, (randomRoom.size.width - 2)), 
+											   randomRoom.position.y + 1 + Random.Range(0, randomRoom.size.height - 2));
+		enemyDefinitions.Add(new EnemyDefinition(randomRoomTilePosition));
+	}
+
 	void AddRoom() {
 
 		bool addedRoom = false;
@@ -455,6 +463,10 @@ public class Level : MonoBehaviour {
 			}
 			
 		}
+
+		Position endPosition = new Position(tunnel.position.x + (tunnel.direction.ToVector().dx * (tunnel.length - 1)), 
+											tunnel.position.y + (tunnel.direction.ToVector().dy * (tunnel.length - 1)));
+		tiles[endPosition.x, endPosition.y] = "wall";
 		
 	}
 
@@ -485,6 +497,13 @@ public class Level : MonoBehaviour {
 
 	void Render() {
 		RenderTiles ();
+	}
+
+	public void UpdateEnemies() {
+		foreach (GameObject enemy in enemies) {
+			enemy.GetComponent<Enemy>().AITurn();
+		}
+		
 	}
 
 	void RenderTiles() {
