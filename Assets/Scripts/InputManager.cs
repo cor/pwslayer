@@ -8,14 +8,21 @@ public class InputManager : MonoBehaviour {
 
 	public Ray ray;
 	public bool ClickedOnEnemy(){
-	Enemy enemy = GameObject.FindWithTag("Enemy").GetComponent<Enemy>();
-		if(Mathf.RoundToInt(ray.origin.x) == enemy.position.x && Mathf.RoundToInt(ray.origin.y) == enemy.position.y){
-			return true;
-		}
-		else{
-			return false;
-		}
+	
+	return false;
 	}
+void CheckArrayOfEnemies(){
+	GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+	for (int i = 0; i <enemies.Length; i++){
+		if (enemies[i].GetComponent<Enemy>().position.x == Mathf.RoundToInt(ray.origin.x)){
+			Debug.Log(i);
+		}
+
+	}
+}
+	
+		
+
 	private bool IsPointerOverUIObject() {
 		PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
 		eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
@@ -53,7 +60,7 @@ public class InputManager : MonoBehaviour {
 		}
 
 		if (Input.GetMouseButtonDown (0)) {
-
+			CheckArrayOfEnemies();
 
 			// Read as: If the poiter is NOT on a UI element
 			if (!IsPointerOverUIObject()) {
@@ -68,9 +75,10 @@ public class InputManager : MonoBehaviour {
 				int dy = Mathf.RoundToInt (ray.origin.y - player.transform.position.y);
 				Direction? direction = new Vector (dx, dy).ToDirection ();
 
-				if (direction.HasValue) {
-					player.GetComponent<Player> ().Move (direction.Value);
-				}
+					if (direction.HasValue) {
+						player.GetComponent<Player> ().Move (direction.Value);
+					}
+					
 				}
 
 			}
