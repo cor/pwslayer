@@ -1,17 +1,17 @@
 [
 	{
 		"id": 0,
-		"title": "Silver Sword",
+		"title": "silverlight",
 		"value": 200,
 		"stats": {
 			"power": 300,
 			"defence": 50,
 			"vitality": 2
 		},
-		"description": "Silverlight Sword",
+		"description": "Silverlight the most powerfull sword in the world.",
 		"stackable": false,
 		"rarity": 5,
-		"slug": "silver_sword"
+		"slug": "silverlight"
 	},
 	{
 		"id": 1,
