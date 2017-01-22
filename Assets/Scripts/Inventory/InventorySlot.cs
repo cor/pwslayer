@@ -19,7 +19,6 @@ public class InventorySlot : MonoBehaviour, IDropHandler {
     {
 		ItemData droppedItem = eventData.pointerDrag.GetComponent<ItemData>();
 
-		// slot is empty
 		if (inventory.items[id].ID == -1) {
 			inventory.items[droppedItem.slot] = new Item();
 			inventory.items[id] = droppedItem.item;
@@ -39,6 +38,12 @@ public class InventorySlot : MonoBehaviour, IDropHandler {
 			
 			inventory.items[droppedItem.slot] = item.GetComponent<ItemData>().item;
 			inventory.items[id] = droppedItem.item;
+		}
+
+		for (int i = 0; i < inventory.items.Count; i++)
+		{
+			Debug.Log(i + " " + inventory.items[i].Slug);
+			
 		}
     }
 }
