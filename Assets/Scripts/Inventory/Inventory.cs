@@ -13,7 +13,6 @@ public class Inventory : MonoBehaviour {
 	public GameObject inventorySlot;
 	public GameObject equipedItemSlot;
 	public GameObject inventoryItem;
-	public Canvas canvas;
 	
 
 	ItemDatabase database;
@@ -98,9 +97,6 @@ public class Inventory : MonoBehaviour {
 			equipedItemSlot.transform.GetChild(0).GetComponent<Image>().color = Color.clear;
 		}
 
-		GameObject highlight = GameObject.Find("Equiped Item Highlight");
-		GameObject itemSlot = slots[equipedItemSlotID];
-		highlight.transform.position = itemSlot.transform.position + new Vector3(itemSlot.GetComponent<RectTransform>().rect.width * canvas.scaleFactor / 2, -1 * itemSlot.GetComponent<RectTransform>().rect.height * canvas.scaleFactor / 2, 0);
 	}
 
 	bool CheckIfItemIsInInventory(Item item) {
