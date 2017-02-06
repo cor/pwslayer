@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class InventorySlot : MonoBehaviour, IDropHandler {
+public class InventorySlot : MonoBehaviour, IDropHandler, IPointerClickHandler {
 
 
 	public int id;
@@ -18,8 +18,13 @@ public class InventorySlot : MonoBehaviour, IDropHandler {
     public void OnDrop(PointerEventData eventData)
     {
 		ItemData droppedItem = eventData.pointerDrag.GetComponent<ItemData>();
+		
+		// If the equiped item is moved, make sure to update the EquipedItemSlotID.
+		bool equipedItemIsMoved = droppedItem.slot == inventory.equipedItemSlotID;
+			
 
 		if (inventory.items[id].ID == -1) {
+			
 			inventory.items[droppedItem.slot] = new Item();
 			inventory.items[id] = droppedItem.item;
 			droppedItem.transform.SetParent(this.transform);
@@ -40,10 +45,12 @@ public class InventorySlot : MonoBehaviour, IDropHandler {
 			inventory.items[id] = droppedItem.item;
 		}
 
-		for (int i = 0; i < inventory.items.Count; i++)
-		{
-			Debug.Log(i + " " + inventory.items[i].Slug);
-			
+		if (equipedItemIsMoved) {
+			inventory.EquipItem(id);
 		}
+		
+    }
+    public void OnPointerClick(PointerEventData eventData) {
+        inventory.EquipItem(id);
     }
 }

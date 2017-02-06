@@ -5,19 +5,24 @@ using System.Collections.Generic;
 
 public class Inventory : MonoBehaviour {
 
+	// UI
 	GameObject inventoryPanel;
 	GameObject slotPanel;
-
-	ItemDatabase database;
-
+	
 	// Prefabs
 	public GameObject inventorySlot;
+	public GameObject equipedItemSlot;
 	public GameObject inventoryItem;
+	public Canvas canvas;
+	
 
+	ItemDatabase database;
 
 	int slotCount;
 	public List<Item> items = new List<Item>();
 	public List<GameObject> slots = new List<GameObject>();
+
+	public int equipedItemSlotID = 0; 
 
 	void Start() {
 
@@ -38,6 +43,7 @@ public class Inventory : MonoBehaviour {
 
 		AddItem (0);
 	}
+
 
 	public void AddItem(int id) {
 		Item itemToAdd = database.FetchItemByID (id);
@@ -77,6 +83,24 @@ public class Inventory : MonoBehaviour {
 
 			}
 		}
+	}
+
+	// Equip an item and show it in the slot next to the inventory icon
+	public void EquipItem(int slotId) {
+
+		equipedItemSlotID = slotId;
+		
+		// if the slot isn't empty
+		if (items[slotId].ID != -1) {
+			equipedItemSlot.transform.GetChild(0).GetComponent<Image>().sprite = items[equipedItemSlotID].Sprite;
+			equipedItemSlot.transform.GetChild(0).GetComponent<Image>().color = Color.white;
+		} else {
+			equipedItemSlot.transform.GetChild(0).GetComponent<Image>().color = Color.clear;
+		}
+
+		GameObject highlight = GameObject.Find("Equiped Item Highlight");
+		GameObject itemSlot = slots[equipedItemSlotID];
+		highlight.transform.position = itemSlot.transform.position + new Vector3(itemSlot.GetComponent<RectTransform>().rect.width * canvas.scaleFactor / 2, -1 * itemSlot.GetComponent<RectTransform>().rect.height * canvas.scaleFactor / 2, 0);
 	}
 
 	bool CheckIfItemIsInInventory(Item item) {
