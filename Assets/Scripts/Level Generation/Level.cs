@@ -394,25 +394,77 @@ public class Level : MonoBehaviour {
 
 		//Replace the outer rows with wall
 		for (int x = 0; x < room.size.width; x++) {
-			tiles [room.position.x + x, room.position.y + 0] = "wall";
-			tiles [room.position.x + x, room.position.y + (room.size.height - 1)] = "wall";
+			tiles [room.position.x + x, room.position.y + 0] = "wall-0101";
+			tiles [room.position.x + x, room.position.y + (room.size.height - 1)] = "wall-0101";
 		}
 
 		for (int y = 0; y < room.size.height; y++) {
-			tiles [room.position.x + 0, room.position.y + y] = "wall";
-			tiles [room.position.x + (room.size.width - 1), room.position.y + y] = "wall"; 
+			tiles [room.position.x + 0, room.position.y + y] = "wall-1010";
+			tiles [room.position.x + (room.size.width - 1), room.position.y + y] = "wall-1010"; 
 		}
+
+		//Place the corners of the wall
+		tiles [room.position.x, room.position.y] = "wall-1100";
+		tiles[room.position.x, room.position.y + room.size.height - 1] = "wall-0110";
+		tiles [room.position.x + room.size.width - 1, room.position.y] = "wall-1001";
+		tiles [room.position.x + room.size.width - 1, room.position.y + room.size.height - 1] = "wall-0011";
 	}
 
 	void AddUsedOpeningToTiles(Opening usedOpening) {
-		tiles[usedOpening.position.x, usedOpening.position.y] = "ground";
+		// tiles[usedOpening.position.x, usedOpening.position.y] = "void";
+
+		switch (usedOpening.direction) {
+			
+			case Direction.North:
+				tiles[usedOpening.position.x, usedOpening.position.y] = "ground";
+				tiles[usedOpening.position.x - 1, usedOpening.position.y] = "wall-1001";
+				tiles[usedOpening.position.x + 1, usedOpening.position.y] = "wall-1100";
+				
+				tiles[usedOpening.position.x, usedOpening.position.y + 1] = "ground";
+				tiles[usedOpening.position.x - 1, usedOpening.position.y + 1] = "wall-0011";
+				tiles[usedOpening.position.x + 1, usedOpening.position.y + 1] = "wall-0110";
+			break;
+			
+			case Direction.East:
+				tiles[usedOpening.position.x, usedOpening.position.y] = "ground";
+				tiles[usedOpening.position.x, usedOpening.position.y - 1] = "wall-0110";
+				tiles[usedOpening.position.x, usedOpening.position.y + 1] = "wall-1100";
+				
+				tiles[usedOpening.position.x + 1, usedOpening.position.y] = "ground";
+				tiles[usedOpening.position.x + 1, usedOpening.position.y - 1] = "wall-0011";
+				tiles[usedOpening.position.x + 1, usedOpening.position.y + 1] = "wall-1001";
+
+			break;
+			case Direction.South:
+				tiles[usedOpening.position.x, usedOpening.position.y] = "ground";
+				tiles[usedOpening.position.x - 1, usedOpening.position.y] = "wall-0011";
+				tiles[usedOpening.position.x + 1, usedOpening.position.y] = "wall-0110";
+				
+				tiles[usedOpening.position.x, usedOpening.position.y - 1] = "ground";
+				tiles[usedOpening.position.x - 1, usedOpening.position.y - 1] = "wall-1001";
+				tiles[usedOpening.position.x + 1, usedOpening.position.y - 1] = "wall-1100";
+			break;
+			case Direction.West:
+				tiles[usedOpening.position.x, usedOpening.position.y] = "ground";
+				tiles[usedOpening.position.x, usedOpening.position.y - 1] = "wall-0011";
+				tiles[usedOpening.position.x, usedOpening.position.y + 1] = "wall-1001";
+				
+				tiles[usedOpening.position.x - 1, usedOpening.position.y] = "ground";
+				tiles[usedOpening.position.x - 1, usedOpening.position.y - 1] = "wall-0110";
+				tiles[usedOpening.position.x - 1, usedOpening.position.y + 1] = "wall-1100";
+			break;
+			
+			default:
+			break;
+			
+		}
 	}
 
 	void AddTunnelToTiles(Tunnel tunnel) {
 
 		Position openingPosition = tunnel.position - tunnel.direction.ToVector();
 		
-		tiles[openingPosition.x, openingPosition.y] = "ground";
+		
 		for (int i = 0; i < tunnel.length; i++) {
 			{
 				switch (tunnel.direction)
@@ -422,8 +474,9 @@ public class Level : MonoBehaviour {
 					tiles[tunnel.position.x, tunnel.position.y + i] = "ground";
 
 					//walls
-					tiles[tunnel.position.x + 1, tunnel.position.y + i] = "wall";
-					tiles[tunnel.position.x - 1, tunnel.position.y + i] = "wall";
+					tiles[tunnel.position.x + 1, tunnel.position.y + i] = "wall-1010";
+					tiles[tunnel.position.x - 1, tunnel.position.y + i] = "wall-1010";
+
 					break;
 					
 					case Direction.East:
@@ -431,8 +484,8 @@ public class Level : MonoBehaviour {
 					tiles[tunnel.position.x + i, tunnel.position.y] = "ground";
 
 					//walls
-					tiles[tunnel.position.x + i, tunnel.position.y + 1] = "wall";
-					tiles[tunnel.position.x + i, tunnel.position.y - 1] = "wall";
+					tiles[tunnel.position.x + i, tunnel.position.y + 1] = "wall-0101";
+					tiles[tunnel.position.x + i, tunnel.position.y - 1] = "wall-0101";
 					break;
 					
 					case Direction.South:
@@ -440,8 +493,8 @@ public class Level : MonoBehaviour {
 					tiles[tunnel.position.x, tunnel.position.y - i] = "ground";
 
 					//walls
-					tiles[tunnel.position.x + 1, tunnel.position.y - i] = "wall";
-					tiles[tunnel.position.x - 1, tunnel.position.y - i] = "wall";
+					tiles[tunnel.position.x + 1, tunnel.position.y - i] = "wall-1010";
+					tiles[tunnel.position.x - 1, tunnel.position.y - i] = "wall-1010";
 					break;
 					
 					case Direction.West:
@@ -449,8 +502,8 @@ public class Level : MonoBehaviour {
 					tiles[tunnel.position.x - i, tunnel.position.y] = "ground";
 
 					//walls
-					tiles[tunnel.position.x - i, tunnel.position.y + 1] = "wall";
-					tiles[tunnel.position.x - i, tunnel.position.y - 1] = "wall";
+					tiles[tunnel.position.x - i, tunnel.position.y + 1] = "wall-0101";
+					tiles[tunnel.position.x - i, tunnel.position.y - 1] = "wall-0101";
 					break;
 
 					default:
@@ -461,6 +514,7 @@ public class Level : MonoBehaviour {
 			}
 			
 		}
+		
 
 		Position endPosition = new Position(tunnel.position.x + (tunnel.direction.ToVector().dx * (tunnel.length - 1)), 
 											tunnel.position.y + (tunnel.direction.ToVector().dy * (tunnel.length - 1)));
@@ -510,6 +564,7 @@ public class Level : MonoBehaviour {
 
 				string tileName = tiles [x, y];
 				GameObject tile = TileForName(tileName);
+				tile.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite> ("Sprites/Tiles/" + tileName);
 
 				SpawnTile(tile, new Position(x, y));
 			}
@@ -528,6 +583,8 @@ public class Level : MonoBehaviour {
 		
 
 	GameObject TileForName(string name) {
+
+		return groundTile;
 		
 		switch (name) {
 		case "ground":

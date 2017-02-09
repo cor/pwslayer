@@ -15,3 +15,15 @@ public struct Opening {
 	}
 
 }
+
+public struct UsedOpening {
+	public Opening opening;
+	public bool rightIsStraight;
+	public bool leftIsStraight;
+
+	public UsedOpening(Opening opening, bool rightIsStraight, bool leftIsStraight) {
+		this.opening = opening;
+		this.rightIsStraight = rightIsStraight;
+		this.leftIsStraight = leftIsStraight;
+	}
+}
