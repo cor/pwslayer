@@ -283,37 +283,41 @@ public class Level : MonoBehaviour {
 
 			Size tunnelSize;
 			Vector tunnelRectPositionDelta;
+			RectangleArea tunnelArea;
 
 			switch (randomOpeningPossibility.direction)
 			{
 				case Direction.North:
-				tunnelSize = new Size(3, tunnelLength);
-				tunnelRectPositionDelta = new Vector(-1, +1);
+				tunnelSize = new Size(5, tunnelLength);
+				tunnelRectPositionDelta = new Vector(-2, +1);
+				tunnelArea = new RectangleArea(randomOpeningPossibility.position + tunnelRectPositionDelta, tunnelSize);
 				break;
 				
 				case Direction.East:
-				tunnelSize = new Size(tunnelLength, 3);
-				tunnelRectPositionDelta = new Vector(+1, -1);
+				tunnelSize = new Size(tunnelLength, 5);
+				tunnelRectPositionDelta = new Vector(+1, -2);
+				tunnelArea = new RectangleArea(randomOpeningPossibility.position + tunnelRectPositionDelta, tunnelSize);
 				break;
 				
 				case Direction.South:
-				tunnelSize = new Size(3, tunnelLength);
-				tunnelRectPositionDelta = new Vector(-1, -(tunnelSize.height));
+				tunnelSize = new Size(5, tunnelLength);
+				tunnelRectPositionDelta = new Vector(-2, -(tunnelSize.height));
+				tunnelArea = new RectangleArea(randomOpeningPossibility.position + tunnelRectPositionDelta, tunnelSize);
 				break;
 				
 				case Direction.West:	
-				tunnelSize = new Size(tunnelLength, 3);
-				tunnelRectPositionDelta = new Vector(-(tunnelSize.width), -1);
+				tunnelSize = new Size(tunnelLength, 5);
+				tunnelRectPositionDelta = new Vector(-(tunnelSize.width), -2);
+				tunnelArea = new RectangleArea(randomOpeningPossibility.position + tunnelRectPositionDelta, tunnelSize);
 				break;
 				
 				default:
 				Debug.LogError("Tunnel's can't be made in diagonal directions");
 				tunnelSize = new Size(0,0);
 				tunnelRectPositionDelta = new Vector(0,0);
+				tunnelArea = new RectangleArea(new Position(-20, -29), new Size(-20, -20));
 				break;
 			}
-			
-			RectangleArea tunnelArea = new RectangleArea(randomOpeningPossibility.position + tunnelRectPositionDelta, tunnelSize);
 
 			if (RectangleAreaIsEmpty(tunnelArea)) {
 				tunnels.Add(new Tunnel(randomOpeningPossibility.position + randomOpeningPossibility.direction.ToVector(), tunnelLength, randomOpeningPossibility.direction));
@@ -345,32 +349,52 @@ public class Level : MonoBehaviour {
 
 			Size roomSize = new Size(Random.Range(minimumRoomSize.width, maximumRoomSize.width), Random.Range(minimumRoomSize.height, maximumRoomSize.height));
 			Position roomPosition;
+			RectangleArea roomArea;
 
 			switch (randomOpeningPossibility.direction) {
 				case Direction.North:
 				roomPosition = new Position(openingPosition.x - (roomSize.width / 2), openingPosition.y + 1);
+				
+				// with margin
+				roomArea = new RectangleArea(new Position(roomPosition.x - 1, roomPosition.y), 
+											 new Size(roomSize.width + 2, roomSize.height + 2));
+
 				break;
 
 				case Direction.East:
 				roomPosition = new Position(openingPosition.x + 1, openingPosition.y - (roomSize.height / 2));
+				
+				// with margin
+				roomArea = new RectangleArea(new Position(roomPosition.x, roomPosition.y - 1), 
+											 new Size(roomSize.width + 2, roomSize.height + 2));
+
 				break;
 
 				case Direction.South:
 				roomPosition = new Position(openingPosition.x - (roomSize.width / 2), openingPosition.y - roomSize.height);
 
+				// with margin
+				roomArea = new RectangleArea(new Position(roomPosition.x - 1, roomPosition.y - 2), 
+											 new Size(roomSize.width + 2, roomSize.height + 2));
+
 				break;
 
 				case Direction.West:
 				roomPosition = new Position(openingPosition.x - roomSize.width, openingPosition.y - (roomSize.height / 2));
+	
+				// with margin
+				roomArea = new RectangleArea(new Position(roomPosition.x - 2, roomPosition.y - 1), 
+											 new Size(roomSize.width + 2, roomSize.height + 2));
+				
 				break;
 
 				default:
 				Debug.LogError("Openings's can't be made in diagonal directions");
 				roomPosition = new Position(-1, -1);
+				roomArea = new RectangleArea(new Position(-20, -29), new Size(-20, -20));
 				break;
 			}
 
-			RectangleArea roomArea = new RectangleArea(roomPosition, roomSize);
 
 			if (RectangleAreaIsEmpty(roomArea)) {
 				rooms.Add(new Room(roomPosition, roomSize));
