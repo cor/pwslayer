@@ -52,5 +52,6 @@ public class InventorySlot : MonoBehaviour, IDropHandler, IPointerClickHandler {
     }
     public void OnPointerClick(PointerEventData eventData) {
         inventory.EquipItem(id);
+		GetComponent<AudioSource>().Play();
     }
 }

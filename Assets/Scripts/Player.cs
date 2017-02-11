@@ -41,28 +41,32 @@ public class Player: MonoBehaviour {
 
 		if (level.CanMoveToTile(position + direction.ToVector())) {
 			
-			position += direction.ToVector ();
+			UpdatePositionBy(direction.ToVector ());
 
-			
 		}
 		else{
-				
-				Direction? newDirection = new Vector (direction.ToVector().dx, 0).ToDirection ();
-				if (newDirection.HasValue) {
-					if (level.CanMoveToTile (position + newDirection.Value.ToVector ())) {
-						position += newDirection.Value.ToVector ();
-					}
-					else{
-						Direction? newerDirection = new Vector (0, direction.ToVector().dy).ToDirection ();
-						if (newerDirection.HasValue) {
-							if (level.CanMoveToTile (position + newerDirection.Value.ToVector ())) {
-								position += newerDirection.Value.ToVector ();
-							}
+			Direction? newDirection = new Vector (direction.ToVector().dx, 0).ToDirection ();
+			
+			if (newDirection.HasValue) {
+				if (level.CanMoveToTile (position + newDirection.Value.ToVector ())) {
+					UpdatePositionBy(newDirection.Value.ToVector ());
+				}
+				else{
+					Direction? newerDirection = new Vector (0, direction.ToVector().dy).ToDirection ();
+					if (newerDirection.HasValue) {
+						if (level.CanMoveToTile (position + newerDirection.Value.ToVector ())) {
+							UpdatePositionBy(newerDirection.Value.ToVector ());
 						}
 					}
 				}
 			}
+		}
 		level.UpdateEnemies();
+	}
+
+	private void UpdatePositionBy(Vector vector) {
+		position += vector;
+		GetComponent<AudioSource>().Play();
 	}
 				
 	void Update () {
