@@ -18,7 +18,6 @@ public class EquipedItemHighlightController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		GameObject highlight = GameObject.Find("Equiped Item Highlight");
 		GameObject itemSlot = inventory.slots[inventory.equipedItemSlotID];
 		
 		// Calculate the correct position

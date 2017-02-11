@@ -60,41 +60,16 @@ public static class DirectionMethods
 	public static Direction Inverted(this Direction direction) {
 		switch (direction)
 		{
-		case Direction.North:
-		return Direction.South;
-		break;
+		case Direction.North:     return Direction.South;
+		case Direction.NorthEast: return Direction.SouthWest;
+		case Direction.East:      return Direction.West;
+		case Direction.SouthEast: return Direction.NorthWest;
+		case Direction.South:     return Direction.North;
+		case Direction.SouthWest: return Direction.NorthEast;
+		case Direction.West:      return Direction.East;
+		case Direction.NorthWest: return Direction.SouthEast;
 
-		case Direction.NorthEast:
-		return Direction.SouthWest;
-		break;
-		
-		case Direction.East:
-		return Direction.West;
-		break;
-		
-		case Direction.SouthEast:
-		return Direction.NorthWest;
-		break;
-		
-		case Direction.South:
-		return Direction.North;
-		break;
-		
-		case Direction.SouthWest:
-		return Direction.NorthEast;
-		break;
-			
-		case Direction.West:
-		return Direction.East;
-		break;
-		
-		case Direction.NorthWest:
-		return Direction.SouthEast;
-		break;
-
-		default:
-		return Direction.North;
-		break;
+		default: return Direction.North;
 		}
 	}
 }

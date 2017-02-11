@@ -353,7 +353,7 @@ public class Level : MonoBehaviour {
 
 			switch (randomOpeningPossibility.direction) {
 				case Direction.North:
-				roomPosition = new Position(openingPosition.x - (roomSize.width / 2), openingPosition.y + 1);
+				roomPosition = new Position(openingPosition.x - (roomSize.width / 2), openingPosition.y + 2);
 				
 				// with margin
 				roomArea = new RectangleArea(new Position(roomPosition.x - 1, roomPosition.y), 
@@ -362,7 +362,7 @@ public class Level : MonoBehaviour {
 				break;
 
 				case Direction.East:
-				roomPosition = new Position(openingPosition.x + 1, openingPosition.y - (roomSize.height / 2));
+				roomPosition = new Position(openingPosition.x + 2, openingPosition.y - (roomSize.height / 2));
 				
 				// with margin
 				roomArea = new RectangleArea(new Position(roomPosition.x, roomPosition.y - 1), 
@@ -371,7 +371,7 @@ public class Level : MonoBehaviour {
 				break;
 
 				case Direction.South:
-				roomPosition = new Position(openingPosition.x - (roomSize.width / 2), openingPosition.y - roomSize.height);
+				roomPosition = new Position(openingPosition.x - (roomSize.width / 2), openingPosition.y - 1 - roomSize.height);
 
 				// with margin
 				roomArea = new RectangleArea(new Position(roomPosition.x - 1, roomPosition.y - 2), 
@@ -380,7 +380,7 @@ public class Level : MonoBehaviour {
 				break;
 
 				case Direction.West:
-				roomPosition = new Position(openingPosition.x - roomSize.width, openingPosition.y - (roomSize.height / 2));
+				roomPosition = new Position(openingPosition.x - 1 - roomSize.width, openingPosition.y - (roomSize.height / 2));
 	
 				// with margin
 				roomArea = new RectangleArea(new Position(roomPosition.x - 2, roomPosition.y - 1), 
@@ -430,6 +430,37 @@ public class Level : MonoBehaviour {
 
 	void AddUsedOpeningToTiles(Opening usedOpening) {
 		tiles[usedOpening.position.x, usedOpening.position.y] = "ground";
+
+		
+		Dictionary<Direction, OffsetTilePair[]> offsetTilePairs = new Dictionary<Direction, OffsetTilePair[]>() {
+			{ Direction.North, new OffsetTilePair[] { 
+				new OffsetTilePair(new Vector(0, +1), "ground"), 
+				new OffsetTilePair(new Vector(-1, +1), "wall"), 
+				new OffsetTilePair(new Vector(+1, +1), "wall"), 
+				new OffsetTilePair(new Vector(0, +2), "ground")} },
+			{ Direction.East, new OffsetTilePair[]  { 
+				new OffsetTilePair(new Vector(+1, 0), "ground"), 
+				new OffsetTilePair(new Vector(+1, +1), "wall"), 
+				new OffsetTilePair(new Vector(+1, -1), "wall"), 
+				new OffsetTilePair(new Vector(+2, 0), "ground")} },
+			{ Direction.South, new OffsetTilePair[] { 
+				new OffsetTilePair(new Vector(0, -1), "ground"), 
+				new OffsetTilePair(new Vector(-1, -1), "wall"), 
+				new OffsetTilePair(new Vector(+1, -1), "wall"), 
+				new OffsetTilePair(new Vector(0, -2), "ground")} },
+			{ Direction.West, new OffsetTilePair[]  { 
+				new OffsetTilePair(new Vector(-1, 0), "ground"), 
+				new OffsetTilePair(new Vector(-1, -1), "wall"), 
+				new OffsetTilePair(new Vector(-1, +1), "wall"), 
+				new OffsetTilePair(new Vector(-2, 0), "ground")} 
+				}
+		};
+
+		foreach (OffsetTilePair offsetTilePair in offsetTilePairs[usedOpening.direction]) {
+			tiles[usedOpening.position.x + offsetTilePair.offset.dx,
+ 		          usedOpening.position.y + offsetTilePair.offset.dy] = offsetTilePair.tile;
+		}
+
 	}
 
 	void AddTunnelToTiles(Tunnel tunnel) {
@@ -576,4 +607,16 @@ public class Level : MonoBehaviour {
 		}
 		return null;
 	}
+	class OffsetTilePair {
+		public Vector offset;
+		public string tile;
+
+		public OffsetTilePair(Vector offset, string tile) {
+			this.offset = offset;
+			this.tile = tile;
+		}
+	}
+
 }
+
+
