@@ -356,7 +356,7 @@ public class Level : MonoBehaviour {
 				roomPosition = new Position(openingPosition.x - (roomSize.width / 2), openingPosition.y + 2);
 				
 				// with margin
-				roomArea = new RectangleArea(new Position(roomPosition.x - 1, roomPosition.y), 
+				roomArea = new RectangleArea(new Position(roomPosition.x - 1, roomPosition.y + 1), 
 											 new Size(roomSize.width + 2, roomSize.height + 2));
 
 				break;
@@ -470,49 +470,29 @@ public class Level : MonoBehaviour {
 		tiles[openingPosition.x, openingPosition.y] = "ground";
 		for (int i = 0; i < tunnel.length; i++) {
 			{
-				switch (tunnel.direction)
-				{
-					case Direction.North:
-					//path
-					tiles[tunnel.position.x, tunnel.position.y + i] = "ground";
-
-					//walls
-					tiles[tunnel.position.x + 1, tunnel.position.y + i] = "wall";
-					tiles[tunnel.position.x - 1, tunnel.position.y + i] = "wall";
-					break;
-					
-					case Direction.East:
-					//path
-					tiles[tunnel.position.x + i, tunnel.position.y] = "ground";
-
-					//walls
-					tiles[tunnel.position.x + i, tunnel.position.y + 1] = "wall";
-					tiles[tunnel.position.x + i, tunnel.position.y - 1] = "wall";
-					break;
-					
-					case Direction.South:
-					//path
-					tiles[tunnel.position.x, tunnel.position.y - i] = "ground";
-
-					//walls
-					tiles[tunnel.position.x + 1, tunnel.position.y - i] = "wall";
-					tiles[tunnel.position.x - 1, tunnel.position.y - i] = "wall";
-					break;
-					
-					case Direction.West:
-					//path
-					tiles[tunnel.position.x - i, tunnel.position.y] = "ground";
-
-					//walls
-					tiles[tunnel.position.x - i, tunnel.position.y + 1] = "wall";
-					tiles[tunnel.position.x - i, tunnel.position.y - 1] = "wall";
-					break;
-
-					default:
-					Debug.LogError("Tunnel's can't be made in diagonal directions");
-					break;
-				}
+				Dictionary<Direction, OffsetTilePair[]> offsetTilePairs = new Dictionary<Direction, OffsetTilePair[]>() {
+					{Direction.North, new OffsetTilePair[] {
+						new OffsetTilePair(new Vector(0, i), "ground"),
+						new OffsetTilePair(new Vector(+1, i), "wall"),
+						new OffsetTilePair(new Vector(-1, i), "wall")}},
+					{Direction.East, new OffsetTilePair[] {
+						new OffsetTilePair(new Vector(i, 0), "ground"),
+						new OffsetTilePair(new Vector(i, +1), "wall"),
+						new OffsetTilePair(new Vector(i, -1), "wall")}},
+					{Direction.South, new OffsetTilePair[] {
+						new OffsetTilePair(new Vector(0, -i), "ground"),
+						new OffsetTilePair(new Vector(+1, -i), "wall"),
+						new OffsetTilePair(new Vector(-1, -i), "wall")}},
+					{Direction.West, new OffsetTilePair[] {
+						new OffsetTilePair(new Vector(-i, 0), "ground"),
+						new OffsetTilePair(new Vector(-i, +1), "wall"),
+						new OffsetTilePair(new Vector(-i, -1), "wall") }}
+				};
 				
+				foreach (OffsetTilePair offsetTilePair in offsetTilePairs[tunnel.direction]) {
+					tiles[tunnel.position.x + offsetTilePair.offset.dx,
+			  			  tunnel.position.y + offsetTilePair.offset.dy] = offsetTilePair.tile;
+				}
 			}
 			
 		}
