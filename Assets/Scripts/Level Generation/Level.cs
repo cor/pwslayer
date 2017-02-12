@@ -16,9 +16,12 @@ public class Level : MonoBehaviour {
 
 	public List<Room> rooms = new List<Room>();
 	public List<Tunnel> tunnels = new List<Tunnel>();
+	public List<Chest> chests = new List<Chest>();
+	
 	public List<Opening> openingPossibilities =  new List<Opening>();
 	public List<Opening> usedOpenings = new List<Opening>();
 	public List<EnemyDefinition> enemyDefinitions = new List<EnemyDefinition>();
+
 
 	public GameObject voidTile;
 	public GameObject groundTile;
@@ -89,6 +92,7 @@ public class Level : MonoBehaviour {
 		DeleteOpeningPossibilities();
 		DelteUsedOpenings();
 		DeleteTunnels();
+		DeleteChests();
 		DeleteEnemyDefinitions();
 	}
 	void DeleteRooms() {
@@ -97,6 +101,10 @@ public class Level : MonoBehaviour {
 	
 	void DeleteTunnels() {
 		tunnels = new List<Tunnel>();
+	}
+
+	void DeleteChests() {
+		chests = new List<Chest>();
 	}
 
 	void DeleteOpeningPossibilities() {
@@ -147,14 +155,32 @@ public class Level : MonoBehaviour {
 		
 		for (int i = 0; i < generationCycles; i++) {
 			RefreshOpeningPossibilities();
+			
 			AddTunnel();
+			
+			UpdateTiles();
+			
+			RefreshOpeningPossibilities();
+			
+			AddRoom();
+			
+			UpdateTiles();
+			
+			AddChest();
+		}
+
+		for (int i = 0; i < enemyCount; i++) {
+			AddEnemyDefinition();
+		}
+
+	}
+
+	void UpdateTiles() {
 			foreach (Tunnel tunnel in tunnels)
 			{
 				AddTunnelToTiles(tunnel);
 			}
-			
-			RefreshOpeningPossibilities();
-			AddRoom();
+		
 			foreach (Room room in rooms)
 			{
 				AddRoomToTiles(room);
@@ -164,13 +190,10 @@ public class Level : MonoBehaviour {
 			{
 				AddUsedOpeningToTiles(usedOpening);
 			}
-			
-		}
 
-		for (int i = 0; i < enemyCount; i++) {
-			AddEnemyDefinition();
-		}
-
+			foreach (Chest chest in chests) {
+				AddChestToTiles(chest);	
+			}
 	}
 
 	void RefreshOpeningPossibilities() {
@@ -273,6 +296,7 @@ public class Level : MonoBehaviour {
 	void AddTunnel() {
 
 		bool addedTunnel = false;
+		int attemptCount = 0; // to prevent infinite loops
 
 		// Keep trying to add a tunnel
 		do {
@@ -324,8 +348,10 @@ public class Level : MonoBehaviour {
 				usedOpenings.Add(randomOpeningPossibility);
 				addedTunnel = true;
 			}
+
+			attemptCount++;
 			
-		} while(!addedTunnel);
+		} while(!addedTunnel && attemptCount < 5);
 
 	}
 
@@ -339,6 +365,7 @@ public class Level : MonoBehaviour {
 	void AddRoom() {
 
 		bool addedRoom = false;
+		int attemptCount = 0; // to prevent infinite loops
 
 		do {
 			List<Opening> tunnelOpeningPossibilities = GetOpeningsConnectedTo(openingPossibilities, "tunnel");
@@ -402,9 +429,38 @@ public class Level : MonoBehaviour {
 				usedOpenings.Add(new Opening(openingPosition + openingDirection.ToVector(), openingDirection.Inverted(), randomOpeningPossibility.connectedTo));
 				addedRoom = true;
 			}
+			attemptCount++;
 
-		} while(!addedRoom);
+		} while(!addedRoom && attemptCount < 5);
 		
+	}
+
+	void AddChest() {
+		
+		bool addedChest = false;
+		int attemptCount = 0; // to prevent infinite loops
+		
+		do {
+			Room randomRoom = rooms[Random.Range(0, rooms.Count)];
+			List<Position> possibleChestPositions = new List<Position>();
+			
+			for (int x = 0; x < randomRoom.size.width; x++) {
+				for (int y = 0; y < randomRoom.size.height; y++) {
+					if (tiles[randomRoom.position.x + x, randomRoom.position.y + y] == "ground") {
+						possibleChestPositions.Add(new Position(randomRoom.position.x + x, randomRoom.position.y + y));
+					}
+				}
+			}
+
+			if (possibleChestPositions.Count != 0) {
+				Position randomPosition = possibleChestPositions[Random.Range(0, possibleChestPositions.Count)];
+				chests.Add(new Chest(randomPosition));
+				addedChest = true;
+			}
+
+			attemptCount++;
+				
+		} while (!addedChest && attemptCount < 5);
 	}
 
 
@@ -427,6 +483,11 @@ public class Level : MonoBehaviour {
 			tiles [room.position.x + (room.size.width - 1), room.position.y + y] = "wall"; 
 		}
 	}
+
+	void AddChestToTiles(Chest chest) {
+		tiles[chest.position.x, chest.position.y] = "chest";
+	}
+
 
 	void AddUsedOpeningToTiles(Opening usedOpening) {
 		tiles[usedOpening.position.x, usedOpening.position.y] = "ground";
@@ -462,6 +523,7 @@ public class Level : MonoBehaviour {
 		}
 
 	}
+
 
 	void AddTunnelToTiles(Tunnel tunnel) {
 
