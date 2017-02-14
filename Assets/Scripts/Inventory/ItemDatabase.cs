@@ -33,13 +33,14 @@ public class ItemDatabase : MonoBehaviour {
 			database.Add (new Item (
 				(int)itemData[i]["id"], 
 				itemData[i]["title"].ToString(), 
-				(int)itemData[i]["value"],
-				(int)itemData[i]["stats"]["power"],
-				(int)itemData[i]["stats"]["defence"],
-				(int)itemData[i]["stats"]["vitality"],
+				(int)itemData[i]["stats"]["attack"],
+				(int)itemData[i]["stats"]["armour"],
+				(int)itemData[i]["stats"]["crit"],
+				(int)itemData[i]["stats"]["speed"],
+				(int)itemData[i]["stats"]["range"],
 				itemData[i]["description"].ToString(),
 				(bool)itemData[i]["stackable"],
-				(int)itemData[i]["rarity"],
+				itemData[i]["itemtype"].ToString(),
 				itemData[i]["slug"].ToString()
 			));
 		
@@ -51,27 +52,29 @@ public class Item {
 
 	public int ID { get; set; }
 	public string Title { get; set; }
-	public int Value { get; set; }
-	public int Power { get; set; }
-	public int Defence { get; set; }
-	public int Vitality { get; set; }
+	public int Attack { get; set; }
+	public int Armour { get; set; }
+	public int Crit { get; set; }
+	public int Speed { get; set; }
+	public int Range { get; set; }
 	public string Description { get; set; }
 	public bool Stackable { get; set; }
-	public int Rarity { get; set; }
+	public string Itemtype { get; set; }
 	public string Slug { get; set; }
 	public Sprite Sprite { get; set; }
 
 
-	public Item(int id, string title, int value, int power, int defence, int vitality, string description, bool stackable, int rarity, string slug) {
+	public Item(int id, string title, int attack, int armour, int crit, int speed, int range, string description, bool stackable, string itemtype, string slug) {
 		this.ID = id;
 		this.Title = title;
-		this.Value = value;
-		this.Power = power;
-		this.Defence = defence;
-		this.Vitality = vitality;
+		this.Attack = attack;
+		this.Armour = armour;
+		this.Crit = crit;
+		this.Speed = speed;
+		this.Range = range;
 		this.Description = description;
 		this.Stackable = stackable;
-		this.Rarity = rarity;
+		this.Itemtype = itemtype;
 		this.Slug = slug;
 
 		this.Sprite = Resources.Load<Sprite> ("Sprites/Items/" + slug);
