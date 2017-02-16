@@ -7,13 +7,16 @@ public class InputManager : MonoBehaviour {
 
 	public int j;
 	public Ray ray;
-	public bool clickedOnEnemy;
+	public bool clickedOnEnemy = false;
 
-void CheckArrayOfEnemies(){
+public void CheckArrayOfEnemies(){
 	GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
 	Player player = GameObject.FindWithTag ("Player").GetComponent<Player>();
 	for (int i = 0; i <enemies.Length; i++){
-		if (enemies[i].GetComponent<Enemy>().position.x == Mathf.RoundToInt(ray.origin.x)&&enemies[i].GetComponent<Enemy>().position.y == Mathf.RoundToInt(ray.origin.y)){
+		Enemy enemy = enemies[i].GetComponent<Enemy>();
+		if (enemy.position.x == Mathf.RoundToInt(ray.origin.x)&&enemy.position.y == Mathf.RoundToInt(ray.origin.y)
+		&& (player.position.x - enemy.position.x)<= 1 && (player.position.x - enemy.position.x) >= -1 
+		&& (player.position.y - enemy.position.y)<= 1 && (player.position.y - enemy.position.y) >= -1){
 			j=i;
 			player.Combat();
 			clickedOnEnemy = true;

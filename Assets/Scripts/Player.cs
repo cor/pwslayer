@@ -24,7 +24,7 @@ public class Player: MonoBehaviour {
 	}
 
 	public void Combat (){
-		GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+		/*GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
 		InputManager inputManager = GameObject.Find("InputManager").GetComponent<InputManager>();
 		Level level = GameObject.FindWithTag("Level").GetComponent<Level>();
 		int randomCrit;
@@ -36,7 +36,8 @@ public class Player: MonoBehaviour {
 			enemy.health -= Mathf.Max(0,(attack * 2) - enemy.armour - random);
 		} else {
 			enemy.health -= Mathf.Max(0,attack - enemy.armour - random);			
-		}
+		}*/
+		Level level = GameObject.FindWithTag("Level").GetComponent<Level>();
 		level.UpdateEnemies();
 	}
 
