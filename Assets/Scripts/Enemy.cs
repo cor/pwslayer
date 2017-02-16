@@ -6,11 +6,11 @@ public class Enemy : MonoBehaviour{
 
     public Position position;
     public bool flipped;
-    public int healthPoints;
-	public int atkDmg;
+    public int health;
+	public int attack;
 	public int critChance;
-	private int randCrit;
-	private int rand;
+	public int armour;
+
     // Animation
     public float smoothTime = 0.3f;
     private Vector3 velocity = Vector3.zero;
@@ -34,16 +34,14 @@ public class Enemy : MonoBehaviour{
 	{
 		Player player = GameObject.Find ("player").GetComponent<Player> ();
 		if (playerInRange ()) { //attack
-			Debug.Log ("In range");
-			randCrit = Random.Range (0, 101); //random int to determine Crit
-			rand = Random.Range (-1, 1); //random int to not have weapons deal set dmg
-			if (randCrit <= critChance) { //deal critical dmg to player
-				player.healthPoints = player.healthPoints - (atkDmg * 2) - rand;
+			int randomCrit = Random.Range (0, 101); //random int to determine Crit
+			int random = Random.Range (-1, 1); //random int to not have weapons deal set dmg
+			if (randomCrit <= critChance) { //deal critical dmg to player
+				player.health -= Mathf.Max(0, (attack * 2) - player.armour - random);
 			} else { //deal normal dmg to player
-				player.healthPoints = player.healthPoints - atkDmg - rand;
+				player.health -= Mathf.Max(0, attack - player.armour - random);
 			}
 		} else { //move towards player
-			Debug.Log ("Out of range");
 			dx = player.position.x - position.x;
 			dy = player.position.y - position.y;
 			Direction? direction = new Vector (dx, dy).ToDirection ();
@@ -75,7 +73,7 @@ public class Enemy : MonoBehaviour{
     void Update()
     {
         Render();
-		/*if(healthPoints<=0){
+		/*if(health<=0){
 			gameObject.SetActive(false);
 		}*/
     }

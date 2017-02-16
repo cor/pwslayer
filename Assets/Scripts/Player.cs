@@ -7,32 +7,39 @@ public class Player: MonoBehaviour {
 
 	public Position position;
 	public bool flipped;
-	public int healthPoints;
-	public int attackDamage;
-	private int randomCrit;
+	public int health;
+	public int attack;
 	public int critChance;
-	private int random;
+	public int armour;
+
 	// Animation
 	public float smoothTime = 0.3f;
 	private Vector3 velocity = Vector3.zero;
 	private Direction lastMoveDirection = Direction.North;
 
-	public void Combat(){
-		Enemy enemy = GameObject.Find("Enemy").GetComponent<Enemy>();
-		randomCrit = Random.Range (0, 101); //random int to determine Crit
-		random = Random.Range (-1, 1); //random int to not have weapons deal set dmg
-		if (randomCrit <= critChance) { //deal critical dmg to player
-			enemy.healthPoints -= (attackDamage * 2) - random;
-		} else { //deal normal dmg to player
-			enemy.healthPoints -= attackDamage - random;			
-		}
-		enemy.AITurn();
-	}
 
 	public void Start() {
 		Level level = GameObject.FindWithTag("Level").GetComponent<Level>();
 		position = new Position(level.size.width / 2, level.size.height / 2);
 	}
+
+	public void Combat (){
+		GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+		InputManager inputManager = GameObject.Find("InputManager").GetComponent<InputManager>();
+		Level level = GameObject.FindWithTag("Level").GetComponent<Level>();
+		int randomCrit;
+		int random;
+		Enemy enemy = enemies[inputManager.j].GetComponent<Enemy>();
+		randomCrit = Random.Range (0, 101);
+		random = Random.Range (-1, 1);
+		if (randomCrit <= critChance) {
+			enemy.health -= Mathf.Max(0,(attack * 2) - enemy.armour - random);
+		} else {
+			enemy.health -= Mathf.Max(0,attack - enemy.armour - random);			
+		}
+		level.UpdateEnemies();
+	}
+
 	public void Move (Direction direction) {
 
 		lastMoveDirection = direction;
@@ -70,7 +77,6 @@ public class Player: MonoBehaviour {
 	}
 				
 	void Update () {
-
 		Render ();
 	}
 

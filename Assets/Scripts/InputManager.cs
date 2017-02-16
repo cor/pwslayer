@@ -5,17 +5,18 @@ using UnityEngine.EventSystems;
 
 public class InputManager : MonoBehaviour {
 
-
+	public int j;
 	public Ray ray;
-	public bool ClickedOnEnemy(){
-	
-	return false;
-	}
+	public bool clickedOnEnemy;
+
 void CheckArrayOfEnemies(){
 	GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+	Player player = GameObject.FindWithTag ("Player").GetComponent<Player>();
 	for (int i = 0; i <enemies.Length; i++){
-		if (enemies[i].GetComponent<Enemy>().position.x == Mathf.RoundToInt(ray.origin.x)){
-			Debug.Log(i);
+		if (enemies[i].GetComponent<Enemy>().position.x == Mathf.RoundToInt(ray.origin.x)&&enemies[i].GetComponent<Enemy>().position.y == Mathf.RoundToInt(ray.origin.y)){
+			j=i;
+			player.Combat();
+			clickedOnEnemy = true;
 		}
 
 	}
@@ -59,21 +60,20 @@ void CheckArrayOfEnemies(){
 			}
 		}
 
-		if (Input.GetMouseButtonDown (0)) {
-			CheckArrayOfEnemies();
+		if (Input.GetMouseButtonDown (0)) {			
 
 			// Read as: If the poiter is NOT on a UI element
 			if (!IsPointerOverUIObject()) {
-
+				
+				CheckArrayOfEnemies();
 				ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-				if(ClickedOnEnemy()){
-					player.GetComponent<Player> ().Combat ();
+				if(clickedOnEnemy){
+					clickedOnEnemy = false;
 				}
-				else{
-				// Calculate Direction
-				int dx = Mathf.RoundToInt (ray.origin.x - player.transform.position.x);
-				int dy = Mathf.RoundToInt (ray.origin.y - player.transform.position.y);
-				Direction? direction = new Vector (dx, dy).ToDirection ();
+				else{	// Calculate Direction	
+					int dx = Mathf.RoundToInt (ray.origin.x - player.transform.position.x);
+					int dy = Mathf.RoundToInt (ray.origin.y - player.transform.position.y);
+					Direction? direction = new Vector (dx, dy).ToDirection ();
 
 					if (direction.HasValue) {
 						player.GetComponent<Player> ().Move (direction.Value);
