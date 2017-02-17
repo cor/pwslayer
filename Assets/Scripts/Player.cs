@@ -24,12 +24,10 @@ public class Player: MonoBehaviour {
 	}
 
 	public void Combat (){
-		//GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
 		InputManager inputManager = GameObject.Find("Input Manager").GetComponent<InputManager>();
 		Level level = GameObject.FindWithTag("Level").GetComponent<Level>();
 		int randomCrit;
 		int random;
-		//Enemy enemy = enemies[inputManager.j].GetComponent<Enemy>();
 		randomCrit = Random.Range (0, 101);
 		random = Random.Range (-1, 1);
 		if (randomCrit <= critChance) {
