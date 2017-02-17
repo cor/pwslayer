@@ -24,20 +24,19 @@ public class Player: MonoBehaviour {
 	}
 
 	public void Combat (){
-		/*GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-		InputManager inputManager = GameObject.Find("InputManager").GetComponent<InputManager>();
+		//GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+		InputManager inputManager = GameObject.Find("Input Manager").GetComponent<InputManager>();
 		Level level = GameObject.FindWithTag("Level").GetComponent<Level>();
 		int randomCrit;
 		int random;
-		Enemy enemy = enemies[inputManager.j].GetComponent<Enemy>();
+		//Enemy enemy = enemies[inputManager.j].GetComponent<Enemy>();
 		randomCrit = Random.Range (0, 101);
 		random = Random.Range (-1, 1);
 		if (randomCrit <= critChance) {
-			enemy.health -= Mathf.Max(0,(attack * 2) - enemy.armour - random);
+			inputManager.enemy.health -= Mathf.Max(0,(attack * 2) - inputManager.enemy.armour - random);
 		} else {
-			enemy.health -= Mathf.Max(0,attack - enemy.armour - random);			
-		}*/
-		Level level = GameObject.FindWithTag("Level").GetComponent<Level>();
+			inputManager.enemy.health -= Mathf.Max(0,attack - inputManager.enemy.armour - random);					
+		}
 		level.UpdateEnemies();
 	}
 

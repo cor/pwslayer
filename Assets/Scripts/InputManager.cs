@@ -5,9 +5,10 @@ using UnityEngine.EventSystems;
 
 public class InputManager : MonoBehaviour {
 
-	public int j;
+	//public int j;
 	public Ray ray;
-	public bool clickedOnEnemy = false;
+	public bool clickedOnEnemy;
+	public Enemy enemy;
 
 public void CheckArrayOfEnemies(){
 	GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
@@ -17,11 +18,10 @@ public void CheckArrayOfEnemies(){
 		if (enemy.position.x == Mathf.RoundToInt(ray.origin.x)&&enemy.position.y == Mathf.RoundToInt(ray.origin.y)
 		&& (player.position.x - enemy.position.x)<= 1 && (player.position.x - enemy.position.x) >= -1 
 		&& (player.position.y - enemy.position.y)<= 1 && (player.position.y - enemy.position.y) >= -1){
-			j=i;
+
 			player.Combat();
 			clickedOnEnemy = true;
 		}
-
 	}
 }
 	
@@ -64,12 +64,10 @@ public void CheckArrayOfEnemies(){
 		}
 
 		if (Input.GetMouseButtonDown (0)) {			
-
 			// Read as: If the poiter is NOT on a UI element
 			if (!IsPointerOverUIObject()) {
-				
-				CheckArrayOfEnemies();
 				ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+				CheckArrayOfEnemies();
 				if(clickedOnEnemy){
 					clickedOnEnemy = false;
 				}
@@ -77,7 +75,6 @@ public void CheckArrayOfEnemies(){
 					int dx = Mathf.RoundToInt (ray.origin.x - player.transform.position.x);
 					int dy = Mathf.RoundToInt (ray.origin.y - player.transform.position.y);
 					Direction? direction = new Vector (dx, dy).ToDirection ();
-
 					if (direction.HasValue) {
 						player.GetComponent<Player> ().Move (direction.Value);
 					}
