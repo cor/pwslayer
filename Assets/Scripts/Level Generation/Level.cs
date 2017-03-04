@@ -155,17 +155,11 @@ public class Level : MonoBehaviour {
 		
 		for (int i = 0; i < generationCycles; i++) {
 			RefreshOpeningPossibilities();
-			
 			AddTunnel();
-			
 			UpdateTiles();
-			
 			RefreshOpeningPossibilities();
-			
 			AddRoom();
-			
 			UpdateTiles();
-			
 			AddChest();
 		}
 
@@ -176,24 +170,11 @@ public class Level : MonoBehaviour {
 	}
 
 	void UpdateTiles() {
-			foreach (Tunnel tunnel in tunnels)
-			{
-				AddTunnelToTiles(tunnel);
-			}
-		
-			foreach (Room room in rooms)
-			{
-				AddRoomToTiles(room);
-			}
-
-			foreach (Opening usedOpening in usedOpenings) 
-			{
-				AddUsedOpeningToTiles(usedOpening);
-			}
-
-			foreach (Chest chest in chests) {
-				AddChestToTiles(chest);	
-			}
+			// So this is what life without .map() is like
+			foreach (Tunnel tunnel in tunnels) { AddTunnelToTiles(tunnel); }
+			foreach (Room room in rooms) { AddRoomToTiles(room); }
+			foreach (Opening usedOpening in usedOpenings) { AddUsedOpeningToTiles(usedOpening); }
+			foreach (Chest chest in chests) { AddChestToTiles(chest); }
 	}
 
 	void RefreshOpeningPossibilities() {
@@ -444,11 +425,23 @@ public class Level : MonoBehaviour {
 			Room randomRoom = rooms[Random.Range(0, rooms.Count)];
 			List<Position> possibleChestPositions = new List<Position>();
 			
-			for (int x = 0; x < randomRoom.size.width; x++) {
-				for (int y = 0; y < randomRoom.size.height; y++) {
-					if (tiles[randomRoom.position.x + x, randomRoom.position.y + y] == "ground") {
-						possibleChestPositions.Add(new Position(randomRoom.position.x + x, randomRoom.position.y + y));
-					}
+			for (int x = 1; x < randomRoom.size.width - 1; x++) {
+				if (tiles[randomRoom.position.x + x, randomRoom.position.y + 1] == "ground") {
+					possibleChestPositions.Add(new Position(randomRoom.position.x + x, randomRoom.position.y + 1));
+				}
+				
+				if (tiles[randomRoom.position.x + x, randomRoom.position.y + randomRoom.size.height - 2] == "ground") {
+					possibleChestPositions.Add(new Position(randomRoom.position.x + x, randomRoom.position.y + randomRoom.size.height - 2));
+				}
+			}
+			
+			for (int y = 1; y < randomRoom.size.height - 1; y++) {
+				if (tiles[randomRoom.position.x + 1, randomRoom.position.y + y] == "ground") {
+					possibleChestPositions.Add(new Position(randomRoom.position.x + 1, randomRoom.position.y + y));
+				}
+				
+				if (tiles[randomRoom.position.x + randomRoom.size.width - 2, randomRoom.position.y + y] == "ground") {
+					possibleChestPositions.Add(new Position(randomRoom.position.x + randomRoom.size.width - 2, randomRoom.position.y + y));
 				}
 			}
 

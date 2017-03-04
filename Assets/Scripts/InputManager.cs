@@ -52,8 +52,6 @@ public void CheckArrayOfEnemies(){
 
 		GameObject player = GameObject.FindWithTag ("Player");
 		
-
-
 		foreach(var keymap in directionKeymaps) {
 			if (Input.GetKeyDown (keymap.Key)) {
 				player.GetComponent<Player>().Move (keymap.Value);
