@@ -16,12 +16,10 @@ public class EventLogger : MonoBehaviour {
 				queue.Dequeue();
 				queue.Enqueue(activity);
 				eventLog = "";
-				Debug.Log("remove");
 			}
 			else{
 				queue.Enqueue(activity);
 				eventLog = "";
-				Debug.Log("add");
 			}
 			foreach (string i in queue){
 					eventLog = eventLog + i + "\n";

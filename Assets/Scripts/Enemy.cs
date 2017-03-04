@@ -3,10 +3,11 @@ using System.Collections;
 
 public class Enemy : MonoBehaviour{
 
-
+	public string enemyName = "slime";
     public Position position;
     public bool flipped;
-    public int health;
+    public int max_health;
+	public int cur_health;
 	public int attack;
 	public int critChance;
 	public int armour;
@@ -32,15 +33,14 @@ public class Enemy : MonoBehaviour{
 
 	public void AITurn()
 	{
+		EventLogger eventLogger = GameObject.Find("EventLog").GetComponent<EventLogger>();
 		Player player = GameObject.Find ("player").GetComponent<Player> ();
 		if (playerInRange ()) { //attack
 			int randomCrit = Random.Range (0, 101); //random int to determine Crit
 			int random = Random.Range (-1, 1); //random int to not have weapons deal set dmg
-			if (randomCrit <= critChance) { //deal critical dmg to player
-				player.health -= Mathf.Max(0, (attack * 2) - player.armour - random);
-			} else { //deal normal dmg to player
-				player.health -= Mathf.Max(0, attack - player.armour - random);
-			}
+			int damage = (randomCrit <= critChance ? attack * 2 : attack);
+			player.health -= Mathf.Max(0, damage - player.armour - random);
+			eventLogger.ToLog(enemyName + " dealt: " + ((Mathf.Max(0, damage - player.armour - random)).ToString()) + " dmg to you");
 		} else { //move towards player
 			dx = player.position.x - position.x;
 			dy = player.position.y - position.y;
