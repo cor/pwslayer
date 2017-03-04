@@ -45,7 +45,7 @@ public class Player: MonoBehaviour {
 		if (level.CanMoveToTile(position + direction.ToVector())) {
 			
 			UpdatePositionBy(direction.ToVector ());
-
+			
 		}
 		else{
 			Direction? newDirection = new Vector (direction.ToVector().dx, 0).ToDirection ();
@@ -65,6 +65,7 @@ public class Player: MonoBehaviour {
 			}
 		}
 		level.UpdateEnemies();
+		
 	}
 
 	private void UpdatePositionBy(Vector vector) {
