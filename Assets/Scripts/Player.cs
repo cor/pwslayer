@@ -24,7 +24,7 @@ public class Player: MonoBehaviour {
 	}
 
 	public void Combat (){
-		
+		EventLogger eventLogger = GameObject.Find("EventLog").GetComponent<EventLogger>();
 		InputManager inputManager = GameObject.Find("Input Manager").GetComponent<InputManager>();
 		Level level = GameObject.FindWithTag("Level").GetComponent<Level>();
 		
@@ -34,6 +34,7 @@ public class Player: MonoBehaviour {
 		
 		inputManager.enemy.health -= Mathf.Max(0, damage - inputManager.enemy.armour - random);
 		level.UpdateEnemies();
+		eventLogger.ToLog("you dealt: "+ ((Mathf.Max(0, damage - inputManager.enemy.armour - random)).ToString()) +" dmg to " + inputManager.enemy.enemyName);
 	}
 
 	public void Move (Direction direction) {
