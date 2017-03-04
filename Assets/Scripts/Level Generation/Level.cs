@@ -426,12 +426,17 @@ public class Level : MonoBehaviour {
 			List<Position> possibleChestPositions = new List<Position>();
 			
 			for (int x = 1; x < randomRoom.size.width - 1; x++) {
-				if (tiles[randomRoom.position.x + x, randomRoom.position.y + 1] == "ground") {
-					possibleChestPositions.Add(new Position(randomRoom.position.x + x, randomRoom.position.y + 1));
-				}
 				
-				if (tiles[randomRoom.position.x + x, randomRoom.position.y + randomRoom.size.height - 2] == "ground") {
-					possibleChestPositions.Add(new Position(randomRoom.position.x + x, randomRoom.position.y + randomRoom.size.height - 2));
+				var posBot = new Position (randomRoom.position.x + x, randomRoom.position.y + 1);
+				
+				if (tiles[posBot.x, posBot.y] == "ground") {
+					possibleChestPositions.Add(posBot);
+				}
+
+				var posTop = new Position(randomRoom.position.x + x, randomRoom.position.y + randomRoom.size.height - 2);
+				
+				if (tiles[posTop.x, posTop.y] == "ground") {
+					possibleChestPositions.Add(posTop);
 				}
 			}
 			
