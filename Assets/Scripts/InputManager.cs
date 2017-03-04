@@ -9,21 +9,21 @@ public class InputManager : MonoBehaviour {
 	public bool clickedOnEnemy;
 	public Enemy enemy;
 
-public void CheckArrayOfEnemies(){
-	GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-	Player player = GameObject.FindWithTag ("Player").GetComponent<Player>();
-	for (int i = 0; i <enemies.Length; i++){
-		enemy = enemies[i].GetComponent<Enemy>();
-		if (enemy.position.x == Mathf.RoundToInt(ray.origin.x)&&enemy.position.y == Mathf.RoundToInt(ray.origin.y)
-		&& (player.position.x - enemy.position.x)<= 1 && (player.position.x - enemy.position.x) >= -1 
-		&& (player.position.y - enemy.position.y)<= 1 && (player.position.y - enemy.position.y) >= -1){
-			player.Combat();
-			clickedOnEnemy = true;
+	public void CheckArrayOfEnemies(){
+		GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+		Player player = GameObject.FindWithTag ("Player").GetComponent<Player>();
+		for (int i = 0; i <enemies.Length; i++){
+			enemy = enemies[i].GetComponent<Enemy>();
+			if (enemy.position.x == Mathf.RoundToInt(ray.origin.x)&&enemy.position.y == Mathf.RoundToInt(ray.origin.y)
+			&& (player.position.x - enemy.position.x) <= 1 && (player.position.x - enemy.position.x) >= -1 
+			&& (player.position.y - enemy.position.y) <= 1 && (player.position.y - enemy.position.y) >= -1){
+				player.Combat();
+				clickedOnEnemy = true;
+			}
 		}
 	}
-}
-	
 		
+			
 
 	private bool IsPointerOverUIObject() {
 		PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
