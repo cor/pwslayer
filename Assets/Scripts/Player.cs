@@ -24,17 +24,15 @@ public class Player: MonoBehaviour {
 	}
 
 	public void Combat (){
+		
 		InputManager inputManager = GameObject.Find("Input Manager").GetComponent<InputManager>();
 		Level level = GameObject.FindWithTag("Level").GetComponent<Level>();
-		int randomCrit;
-		int random;
-		randomCrit = Random.Range (0, 101);
-		random = Random.Range (-1, 1);
-		if (randomCrit <= critChance) {
-			inputManager.enemy.health -= Mathf.Max(0,(attack * 2) - inputManager.enemy.armour - random);
-		} else {
-			inputManager.enemy.health -= Mathf.Max(0,attack - inputManager.enemy.armour - random);					
-		}
+		
+		int randomCrit = Random.Range (0, 101);
+		int random = Random.Range (-1, 1); // random what?
+		int damage = (randomCrit <= critChance ? attack * 2 : attack);
+		
+		inputManager.enemy.health -= Mathf.Max(0, damage - inputManager.enemy.armour - random);
 		level.UpdateEnemies();
 	}
 
