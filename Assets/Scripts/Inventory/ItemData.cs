@@ -36,8 +36,11 @@ public class ItemData : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 		}
     }
 
-    public void OnEndDrag(PointerEventData eventData)
-    {
+    public void OnEndDrag(PointerEventData eventData) {
+
+		Ray ray = Camera.main.ScreenPointToRay (eventData.position);
+		Position pointerInLevelPosition = new Position(Mathf.RoundToInt(ray.origin.x), Mathf.RoundToInt(ray.origin.y));
+		// use for item
 
 		this.transform.SetParent(inventory.slots[slot].transform);
 		SnapPositionToCenterOfParent();
