@@ -160,7 +160,11 @@ public class Level : MonoBehaviour {
 			RefreshOpeningPossibilities();
 			AddRoom();
 			UpdateTiles();
+		}
+		
+		for (int i = 0; i < generationCycles; i++) {
 			AddChest();
+			UpdateTiles();
 		}
 
 		for (int i = 0; i < enemyCount; i++) {
@@ -427,26 +431,29 @@ public class Level : MonoBehaviour {
 			
 			for (int x = 1; x < randomRoom.size.width - 1; x++) {
 				
-				var posBot = new Position (randomRoom.position.x + x, randomRoom.position.y + 1);
+				Position posBot = new Position (randomRoom.position.x + x, randomRoom.position.y + 1);
 				
-				if (tiles[posBot.x, posBot.y] == "ground") {
+				if (tiles[posBot.x, posBot.y] == "ground" && !OpeningCloseToPosition(posBot)) {
 					possibleChestPositions.Add(posBot);
 				}
 
-				var posTop = new Position(randomRoom.position.x + x, randomRoom.position.y + randomRoom.size.height - 2);
+				Position posTop = new Position(randomRoom.position.x + x, randomRoom.position.y + randomRoom.size.height - 2);
 				
-				if (tiles[posTop.x, posTop.y] == "ground") {
+				if (tiles[posTop.x, posTop.y] == "ground" && !OpeningCloseToPosition(posTop)) {
 					possibleChestPositions.Add(posTop);
 				}
 			}
 			
 			for (int y = 1; y < randomRoom.size.height - 1; y++) {
-				if (tiles[randomRoom.position.x + 1, randomRoom.position.y + y] == "ground") {
-					possibleChestPositions.Add(new Position(randomRoom.position.x + 1, randomRoom.position.y + y));
+				
+				Position posLeft = new Position(randomRoom.position.x + 1, randomRoom.position.y + y);
+				if (tiles[posLeft.x, posLeft.y] == "ground" && !OpeningCloseToPosition(posLeft)) {
+					possibleChestPositions.Add(posLeft);
 				}
 				
-				if (tiles[randomRoom.position.x + randomRoom.size.width - 2, randomRoom.position.y + y] == "ground") {
-					possibleChestPositions.Add(new Position(randomRoom.position.x + randomRoom.size.width - 2, randomRoom.position.y + y));
+				Position posRight = new Position(randomRoom.position.x + randomRoom.size.width - 2, randomRoom.position.y + y);
+				if (tiles[posRight.x, posRight.y] == "ground" && !OpeningCloseToPosition(posRight)) {
+					possibleChestPositions.Add(posRight);
 				}
 			}
 
@@ -488,8 +495,8 @@ public class Level : MonoBehaviour {
 
 
 	void AddUsedOpeningToTiles(Opening usedOpening) {
-		tiles[usedOpening.position.x, usedOpening.position.y] = "ground";
 
+		tiles[usedOpening.position.x, usedOpening.position.y] = "ground";
 		
 		Dictionary<Direction, OffsetTilePair[]> offsetTilePairs = new Dictionary<Direction, OffsetTilePair[]>() {
 			{ Direction.North, new OffsetTilePair[] { 
@@ -632,6 +639,28 @@ public class Level : MonoBehaviour {
 			}
 		}
 		return foundOpenings;
+	}
+
+
+	// Used to prevent chests from spawning in or next to openings
+	private bool OpeningCloseToPosition(Position position) {
+		foreach (Opening usedOpening in usedOpenings) {
+			if (( position.x == usedOpening.position.x && position.y == usedOpening.position.y ) ||
+			
+				( position.x + 1 == usedOpening.position.x && position.y == usedOpening.position.y ) ||
+				( position.x + 2 == usedOpening.position.x && position.y == usedOpening.position.y ) ||
+				( position.x - 1 == usedOpening.position.x && position.y == usedOpening.position.y ) ||
+				( position.x - 2 == usedOpening.position.x && position.y == usedOpening.position.y ) ||
+				
+				( position.x == usedOpening.position.x && position.y + 1 == usedOpening.position.y ) ||
+				( position.x == usedOpening.position.x && position.y + 2 == usedOpening.position.y ) ||
+				( position.x == usedOpening.position.x && position.y - 1 == usedOpening.position.y ) ||
+				( position.x == usedOpening.position.x && position.y - 2 == usedOpening.position.y ) ){
+
+				return true;
+			}
+		}
+		return false;
 	}
 		
 	public bool CanMoveToTile(Position position) {
