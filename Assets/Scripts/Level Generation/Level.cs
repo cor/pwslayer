@@ -27,9 +27,10 @@ public class Level : MonoBehaviour {
 	public GameObject slime;
 	public GameObject droppedItem;
 
+
 	string[,] tiles;
 	List<GameObject> enemies = new List<GameObject>();
-	List<GameObject> droppedItems = new List<GameObject>();
+	public List<GameObject> droppedItems = new List<GameObject>();
 
 
 	// Constraints
@@ -495,7 +496,7 @@ public class Level : MonoBehaviour {
 		tiles[chest.position.x, chest.position.y] = "chest";
 	}
 	
-	DroppedItem DroppedItemAtPosition(Position position) {
+	public DroppedItem DroppedItemAtPosition(Position position) {
 		foreach (GameObject droppedItem in droppedItems) {
 			Position droppedItemPosition = droppedItem.GetComponent<DroppedItem>().position;
 			if (position.x == droppedItemPosition.x && position.y == droppedItemPosition.y) {
@@ -503,6 +504,19 @@ public class Level : MonoBehaviour {
 			}	
 		}
 		return null;
+	}
+
+	public void RemoveDroppedItem(Position position) {
+		for (int i = 0; i < droppedItems.Count; i++)
+		{
+			Position droppedItemPosition = droppedItems[0].GetComponent<DroppedItem>().position;
+			if (droppedItemPosition.x == position.x && droppedItemPosition.y == position.y)  {
+				GameObject.Destroy(droppedItems[i]);
+				droppedItems.RemoveAt(i);
+			}
+		}
+		
+		
 	}
 
 

@@ -70,6 +70,22 @@ public class InputManager : MonoBehaviour {
 				else{	// Calculate Direction	
 					int dx = Mathf.RoundToInt (ray.origin.x - player.transform.position.x);
 					int dy = Mathf.RoundToInt (ray.origin.y - player.transform.position.y);
+
+					
+					
+					//DEBUG
+					Level level = GameObject.FindWithTag("Level").GetComponent<Level>();
+					Position clickInLevelPosition = new Position(Mathf.RoundToInt(ray.origin.x), Mathf.RoundToInt(ray.origin.y));
+					Inventory inventory = GameObject.Find("Inventory").GetComponent<Inventory>();
+
+					DroppedItem droppedItem = level.DroppedItemAtPosition(clickInLevelPosition);
+					if (droppedItem != null) {
+						inventory.AddItem(droppedItem.itemID);
+						level.RemoveDroppedItem(clickInLevelPosition);
+						
+					}
+
+
 					Direction? direction = new Vector (dx, dy).ToDirection ();
 					if (direction.HasValue) {
 						player.GetComponent<Player> ().Move (direction.Value);
