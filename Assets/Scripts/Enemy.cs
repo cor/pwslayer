@@ -6,8 +6,8 @@ public class Enemy : MonoBehaviour{
 	public string enemyName = "slime";
     public Position position;
     public bool flipped;
-    public int max_health;
-	public int cur_health;
+    public int maxHealth;
+	public int curHealth;
 	public int attack;
 	public int critChance;
 	public int armour;
@@ -70,6 +70,9 @@ public class Enemy : MonoBehaviour{
 		}
 	}
 
+	void Start(){
+		curHealth = maxHealth;
+	}
     void Update()
     {
         Render();
