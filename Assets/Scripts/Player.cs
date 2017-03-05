@@ -32,7 +32,8 @@ public class Player: MonoBehaviour {
 		int random = Random.Range (-1, 1); // random what?
 		int damage = (randomCrit <= critChance ? attack * 2 : attack);
 		
-		inputManager.enemy.health -= Mathf.Max(0, damage - inputManager.enemy.armour - random);
+		// TEMP COMMENTED OUT
+		// inputManager.enemy.health -= Mathf.Max(0, damage - inputManager.enemy.armour - random);
 		level.UpdateEnemies();
 		eventLogger.ToLog("you dealt: "+ ((Mathf.Max(0, damage - inputManager.enemy.armour - random)).ToString()) +" dmg to " + inputManager.enemy.enemyName);
 	}

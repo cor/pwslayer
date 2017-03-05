@@ -23,14 +23,14 @@ public class Level : MonoBehaviour {
 	public List<EnemyDefinition> enemyDefinitions = new List<EnemyDefinition>();
 
 
-	public GameObject voidTile;
 	public GameObject groundTile;
-	public GameObject wallTile;
-	public GameObject doorTile;
 	public GameObject slime;
+	public GameObject droppedItem;
+
 
 	string[,] tiles;
 	List<GameObject> enemies = new List<GameObject>();
+	public List<GameObject> droppedItems = new List<GameObject>();
 
 
 	// Constraints
@@ -45,6 +45,9 @@ public class Level : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		Generate ();
+		GameObject dropItem = Instantiate(droppedItem, Vector3.zero, Quaternion.identity);
+		dropItem.GetComponent<DroppedItem>().Init(3, new Position(50, 50));
+		droppedItems.Add(dropItem);
 	}
 
 	public void Generate() {
@@ -492,6 +495,29 @@ public class Level : MonoBehaviour {
 	void AddChestToTiles(Chest chest) {
 		tiles[chest.position.x, chest.position.y] = "chest";
 	}
+	
+	public DroppedItem DroppedItemAtPosition(Position position) {
+		foreach (GameObject droppedItem in droppedItems) {
+			Position droppedItemPosition = droppedItem.GetComponent<DroppedItem>().position;
+			if (position.x == droppedItemPosition.x && position.y == droppedItemPosition.y) {
+				return droppedItem.GetComponent<DroppedItem>();
+			}	
+		}
+		return null;
+	}
+
+	public void RemoveDroppedItem(Position position) {
+		for (int i = 0; i < droppedItems.Count; i++)
+		{
+			Position droppedItemPosition = droppedItems[0].GetComponent<DroppedItem>().position;
+			if (droppedItemPosition.x == position.x && droppedItemPosition.y == position.y)  {
+				GameObject.Destroy(droppedItems[i]);
+				droppedItems.RemoveAt(i);
+			}
+		}
+		
+		
+	}
 
 
 	void AddUsedOpeningToTiles(Opening usedOpening) {
@@ -664,7 +690,7 @@ public class Level : MonoBehaviour {
 	}
 		
 	public bool CanMoveToTile(Position position) {
-		return tiles [position.x, position.y] == "ground";
+		return tiles [position.x, position.y] == "ground" && DroppedItemAtPosition(position) == null;
 	}
 
 	public GameObject EnemyIsOnTile(Position position) {

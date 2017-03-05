@@ -15,7 +15,7 @@ public class Inventory : MonoBehaviour {
 	public GameObject inventoryItem;
 	
 
-	ItemDatabase database;
+	public ItemDatabase database;
 
 	int slotCount;
 	public List<Item> items = new List<Item>();
