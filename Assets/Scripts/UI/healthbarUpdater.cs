@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class healthbarUpdater : MonoBehaviour {
 
-
-	public float healthBar;
-
-	void Update () {
+public Enemy enemy;
+public HealthBar healthBar;
+	
+	void Update (){
+		GameObject[] healthBars = GameObject.FindGameObjectsWithTag("HealthBar");
 		GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-		for (int i = 0; i <enemies.Length; i++){
-			Enemy enemy = enemies[i].GetComponent<Enemy>();
-			healthBar = (float)enemy.curHealth/(float)enemy.maxHealth;
-			transform.localScale = new Vector3(healthBar,1,1);
-		}
+		for (int i = 0; i < enemies.Length; i++)
+        {
+			enemy = enemies[i].GetComponent<Enemy>();
+			healthBar = healthBars[i].GetComponent<HealthBar>();
+			healthBar.HealthRemaining = ((float)enemy.curHealth)/((float)enemy.maxHealth);
+            
+        }
 	}
 }
