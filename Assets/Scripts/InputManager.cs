@@ -67,13 +67,11 @@ public class InputManager : MonoBehaviour {
 				if(clickedOnEnemy){
 					clickedOnEnemy = false;
 				}
-				else{	// Calculate Direction	
+				else {		
+					// Check if there is an item to be picked up
 					int dx = Mathf.RoundToInt (ray.origin.x - player.transform.position.x);
 					int dy = Mathf.RoundToInt (ray.origin.y - player.transform.position.y);
-
 					
-					
-					//DEBUG
 					Level level = GameObject.FindWithTag("Level").GetComponent<Level>();
 					Position clickInLevelPosition = new Position(Mathf.RoundToInt(ray.origin.x), Mathf.RoundToInt(ray.origin.y));
 					Inventory inventory = GameObject.Find("Inventory").GetComponent<Inventory>();
@@ -83,12 +81,13 @@ public class InputManager : MonoBehaviour {
 						inventory.AddItem(droppedItem.itemID);
 						level.RemoveDroppedItem(clickInLevelPosition);
 						
-					}
-
-
-					Direction? direction = new Vector (dx, dy).ToDirection ();
-					if (direction.HasValue) {
-						player.GetComponent<Player> ().Move (direction.Value);
+					} else {
+						// If there isn't an item to be picked up, move the player in the cursor direcitiion
+						Direction? direction = new Vector (dx, dy).ToDirection ();
+						if (direction.HasValue) {
+							player.GetComponent<Player> ().Move (direction.Value);
+						}
+						
 					}
 					
 				}

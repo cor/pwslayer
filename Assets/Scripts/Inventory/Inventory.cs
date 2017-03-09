@@ -102,6 +102,9 @@ public class Inventory : MonoBehaviour {
 	}
 
 	public void RemoveItem(int slotId) {
+		EventLogger eventLogger = GameObject.Find("EventLog").GetComponent<EventLogger>();
+		eventLogger.ToLog("Droppped " + items[slotId].Title);
+		
 		items[slotId] = new Item();
 		GameObject.Destroy(slots[slotId].transform.GetChild(0).gameObject);
 	}

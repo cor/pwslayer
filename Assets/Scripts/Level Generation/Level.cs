@@ -513,7 +513,7 @@ public class Level : MonoBehaviour {
 	public void RemoveDroppedItem(Position position) {
 		for (int i = 0; i < droppedItems.Count; i++)
 		{
-			Position droppedItemPosition = droppedItems[0].GetComponent<DroppedItem>().position;
+			Position droppedItemPosition = droppedItems[i].GetComponent<DroppedItem>().position;
 			if (droppedItemPosition.x == position.x && droppedItemPosition.y == position.y)  {
 				GameObject.Destroy(droppedItems[i]);
 				droppedItems.RemoveAt(i);
