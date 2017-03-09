@@ -81,6 +81,9 @@ public class InputManager : MonoBehaviour {
 						inventory.AddItem(droppedItem.itemID);
 						level.RemoveDroppedItem(clickInLevelPosition);
 						
+						EventLogger eventLogger = GameObject.Find("EventLog").GetComponent<EventLogger>();
+						eventLogger.ToLog("Picked up " + inventory.database.FetchItemByID(droppedItem.itemID).Title);
+
 					} else {
 						// If there isn't an item to be picked up, move the player in the cursor direcitiion
 						Direction? direction = new Vector (dx, dy).ToDirection ();

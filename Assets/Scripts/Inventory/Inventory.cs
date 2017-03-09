@@ -107,6 +107,9 @@ public class Inventory : MonoBehaviour {
 		
 		items[slotId] = new Item();
 		GameObject.Destroy(slots[slotId].transform.GetChild(0).gameObject);
+
+		// make sure to update the equiped item display
+		EquipItem(equipedItemSlotID);
 	}
 
 	bool CheckIfItemIsInInventory(Item item) {
