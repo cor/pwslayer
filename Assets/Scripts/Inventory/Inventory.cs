@@ -8,6 +8,7 @@ public class Inventory : MonoBehaviour {
 	// UI
 	GameObject inventoryPanel;
 	GameObject slotPanel;
+	EventLogger eventLogger;
 	
 	// Prefabs
 	public GameObject inventorySlot;
@@ -24,6 +25,7 @@ public class Inventory : MonoBehaviour {
 	public int equipedItemSlotID = 0; 
 
 	void Start() {
+		
 
 		database = GetComponent<ItemDatabase> ();
 
@@ -31,6 +33,7 @@ public class Inventory : MonoBehaviour {
 		inventoryPanel = GameObject.Find ("Inventory Panel");
 		slotPanel = inventoryPanel.transform.FindChild ("Slot Panel").gameObject;
 
+		eventLogger = GameObject.Find("EventLog").GetComponent<EventLogger>();
 
 		for (int i = 0; i < slotCount; i++) {
 
@@ -40,6 +43,7 @@ public class Inventory : MonoBehaviour {
 			slots [i].transform.SetParent(slotPanel.transform, false);
 		}
 
+		// test
 		AddItem (0);
 		AddItem (1);
 		AddItem (2);
@@ -89,7 +93,15 @@ public class Inventory : MonoBehaviour {
 	// Equip an item and show it in the slot next to the inventory icon
 	public void EquipItem(int slotId) {
 
-		equipedItemSlotID = slotId;
+		if (equipedItemSlotID != slotId) {
+			equipedItemSlotID = slotId;
+			
+			string itemTitle = items[equipedItemSlotID].Title;
+			if ( itemTitle != null ) {
+				eventLogger.ToLog("Equiped " +  itemTitle);
+			}
+		}
+
 		
 		// if the slot isn't empty
 		if (items[slotId].ID != -1) {
@@ -102,7 +114,6 @@ public class Inventory : MonoBehaviour {
 	}
 
 	public void RemoveItem(int slotId) {
-		EventLogger eventLogger = GameObject.Find("EventLog").GetComponent<EventLogger>();
 		eventLogger.ToLog("Droppped " + items[slotId].Title);
 		
 		items[slotId] = new Item();
