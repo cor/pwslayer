@@ -40,7 +40,22 @@ public class ItemData : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
 		Ray ray = Camera.main.ScreenPointToRay (eventData.position);
 		Position pointerInLevelPosition = new Position(Mathf.RoundToInt(ray.origin.x), Mathf.RoundToInt(ray.origin.y));
-		// use for item
+
+		// If the Item is not dropped on the inventory but on the ground
+		if (!EventSystem.current.IsPointerOverGameObject()) {
+			
+			// Add it to the level
+			Level level = GameObject.FindWithTag("Level").GetComponent<Level>();
+			if (level.DroppedItemAtPosition(pointerInLevelPosition) == null) {
+				
+				// There is room on the ground for an item, drop it.
+				level.AddDroppedItem(item.ID, pointerInLevelPosition);
+				
+				this.transform.SetParent(inventory.slots[slot].transform);
+				inventory.RemoveItem(slot);
+			}
+			
+		}
 
 		this.transform.SetParent(inventory.slots[slot].transform);
 		SnapPositionToCenterOfParent();

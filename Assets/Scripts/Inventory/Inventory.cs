@@ -101,6 +101,11 @@ public class Inventory : MonoBehaviour {
 
 	}
 
+	public void RemoveItem(int slotId) {
+		items[slotId] = new Item();
+		GameObject.Destroy(slots[slotId].transform.GetChild(0).gameObject);
+	}
+
 	bool CheckIfItemIsInInventory(Item item) {
 		for (int i = 0; i < items.Count; i++) {
 			if (items [i].ID == item.ID) {

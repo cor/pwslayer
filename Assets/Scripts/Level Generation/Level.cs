@@ -45,10 +45,9 @@ public class Level : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		Generate ();
-		GameObject dropItem = Instantiate(droppedItem, Vector3.zero, Quaternion.identity);
-		dropItem.GetComponent<DroppedItem>().Init(3, new Position(50, 50));
-		droppedItems.Add(dropItem);
+		AddDroppedItem(3, new Position(51, 50));
 	}
+
 
 	public void Generate() {
 
@@ -279,6 +278,11 @@ public class Level : MonoBehaviour {
 			}
 		}
 
+	}
+	public void AddDroppedItem(int id, Position position) {
+		GameObject dropItem = Instantiate(droppedItem, Vector3.zero, Quaternion.identity);
+		dropItem.GetComponent<DroppedItem>().Init(id, position);
+		droppedItems.Add(dropItem);
 	}
 
 	void AddTunnel() {
