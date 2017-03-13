@@ -694,7 +694,9 @@ public class Level : MonoBehaviour {
 	}
 		
 	public bool CanMoveToTile(Position position) {
-		return tiles [position.x, position.y] == "ground" && DroppedItemAtPosition(position) == null;
+		return tiles [position.x, position.y] == "ground" 
+		&& DroppedItemAtPosition(position) == null 
+		&& EnemyIsOnTile(position) == null;
 	}
 
 	public GameObject EnemyIsOnTile(Position position) {
