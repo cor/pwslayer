@@ -466,7 +466,7 @@ public class Level : MonoBehaviour {
 
 			if (possibleChestPositions.Count != 0) {
 				Position randomPosition = possibleChestPositions[Random.Range(0, possibleChestPositions.Count)];
-				chests.Add(new Chest(randomPosition));
+				chests.Add(new Chest(randomPosition, GenerateRandomChestContents()));
 				addedChest = true;
 			}
 
@@ -475,6 +475,10 @@ public class Level : MonoBehaviour {
 		} while (!addedChest && attemptCount < 5);
 	}
 
+	int[] GenerateRandomChestContents() {
+		int[] items = new int[16];	
+		return items;
+	}
 
 	void AddRoomToTiles(Room room) {
 		// Place ground everywhere
@@ -508,6 +512,15 @@ public class Level : MonoBehaviour {
 			}	
 		}
 		return null;
+	}
+
+	public int ChestAtPosition(Position position) {
+		for (int i = 0; i < chests.Count; i++) {
+			if (position.x == chests[i].position.x && position.y == chests[i].position.y) {
+				return i;
+			}
+		}
+		return -1; // no chest at the desired position;
 	}
 
 	public void RemoveDroppedItem(Position position) {
@@ -698,6 +711,7 @@ public class Level : MonoBehaviour {
 		&& DroppedItemAtPosition(position) == null 
 		&& EnemyIsOnTile(position) == null;
 	}
+
 
 	public GameObject EnemyIsOnTile(Position position) {
 		for (int i = 0; i < enemies.Count; i++) {

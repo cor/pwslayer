@@ -76,6 +76,7 @@ public class InputManager : MonoBehaviour {
 					Position clickInLevelPosition = new Position(Mathf.RoundToInt(ray.origin.x), Mathf.RoundToInt(ray.origin.y));
 					Inventory inventory = GameObject.Find("Inventory").GetComponent<Inventory>();
 
+					
 					DroppedItem droppedItem = level.DroppedItemAtPosition(clickInLevelPosition);
 					if (droppedItem != null) {
 						inventory.AddItem(droppedItem.itemID);
@@ -84,6 +85,10 @@ public class InputManager : MonoBehaviour {
 						EventLogger eventLogger = GameObject.Find("EventLog").GetComponent<EventLogger>();
 						eventLogger.ToLog("Picked up " + inventory.database.FetchItemByID(droppedItem.itemID).Title);
 
+					} else if (level.ChestAtPosition(clickInLevelPosition) != -1) {
+						ChestManager chestManager = GameObject.Find("ChestManager").GetComponent<ChestManager>();
+						chestManager.SetOpen(true);
+						
 					} else {
 						// If there isn't an item to be picked up, move the player in the cursor direcitiion
 						Direction? direction = new Vector (dx, dy).ToDirection ();
