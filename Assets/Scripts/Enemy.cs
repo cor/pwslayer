@@ -73,13 +73,7 @@ public class Enemy : MonoBehaviour{
 	void Start(){
 		curHealth = maxHealth;
 	}
-    void Update()
-    {
-        Render();
-		/*if(health<=0){
-			gameObject.SetActive(false);
-		}*/
-    }
+  
 
     public void Render()
     {

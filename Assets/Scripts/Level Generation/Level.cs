@@ -638,11 +638,28 @@ public class Level : MonoBehaviour {
  				 position.y > tiles.GetUpperBound(1));
 	}
 
+	
+	/*void KillEnemies(){
+		int i = 0;
+		List<GameObject> templist = enemies;
+		
+		foreach (GameObject enemy in enemies) {
+		Enemy script=enemy.GetComponent<Enemy>();
+		i+=1;	
+			if(script.curHealth<=0){
+				templist.RemoveAt(i-1);
+				Destroy(enemy);
+			}
+		}
+		enemies = templist;
+	}*/
+
 	void Render() {
 		RenderTiles ();
 	}
 
 	public void UpdateEnemies() {
+		//KillEnemies();
 		foreach (GameObject enemy in enemies) {
 			enemy.GetComponent<Enemy>().AITurn();
 		}
