@@ -30,7 +30,7 @@ public class Enemy : MonoBehaviour{
 
 		}
 	}
-
+	
 	public void AITurn()
 	{
 		EventLogger eventLogger = GameObject.Find("EventLog").GetComponent<EventLogger>();
@@ -74,7 +74,9 @@ public class Enemy : MonoBehaviour{
 		curHealth = maxHealth;
 	}
   
-
+	public void Update(){
+		Render();
+	}
     public void Render()
     {
 

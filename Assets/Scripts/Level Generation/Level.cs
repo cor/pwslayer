@@ -639,7 +639,7 @@ public class Level : MonoBehaviour {
 	}
 
 	
-	/*void KillEnemies(){
+	void KillEnemies(){
 		int i = 0;
 		List<GameObject> templist = enemies;
 		
@@ -652,14 +652,14 @@ public class Level : MonoBehaviour {
 			}
 		}
 		enemies = templist;
-	}*/
+	}
 
 	void Render() {
 		RenderTiles ();
 	}
 
 	public void UpdateEnemies() {
-		//KillEnemies();
+		KillEnemies();
 		foreach (GameObject enemy in enemies) {
 			enemy.GetComponent<Enemy>().AITurn();
 		}
