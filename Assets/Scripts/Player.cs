@@ -8,18 +8,18 @@ public class Player: MonoBehaviour {
 	public Position position;
 	public bool flipped;
 	public int health;
-	public int attack;
-	public int critChance;
-	public int armour;
+	public int armor;
 
 	// Animation
 	public float smoothTime = 0.3f;
 	private Vector3 velocity = Vector3.zero;
 	private Direction lastMoveDirection = Direction.North;
 
+	private Inventory inventory;
 
 	public void Start() {
 		Level level = GameObject.FindWithTag("Level").GetComponent<Level>();
+		Inventory inventory = GameObject.Find("Inventory").GetComponent<Inventory>();
 		position = new Position(level.size.width / 2, level.size.height / 2);
 	}
 
@@ -27,15 +27,17 @@ public class Player: MonoBehaviour {
 		EventLogger eventLogger = GameObject.Find("EventLog").GetComponent<EventLogger>();
 		InputManager inputManager = GameObject.Find("Input Manager").GetComponent<InputManager>();
 		Level level = GameObject.FindWithTag("Level").GetComponent<Level>();
-		
-		int randomCrit = Random.Range (0, 101);
-		int random = Random.Range (-1, 1); // random what?
-		int damage = (randomCrit <= critChance ? attack * 2 : attack);
-		
 
-		inputManager.enemy.curHealth -= Mathf.Max(0, damage - inputManager.enemy.armour - random);
+		int attack = inventory.GetEquipedItem().Attack;
+		int critChance = inventory.GetEquipedItem().Crit;
+		
+		int randomCrit = Random.Range (0, 100);
+		int randomDamage = Random.Range (-1, 1);		
+		int damage = randomCrit <= critChance ? attack * 2 : attack;
+
+		inputManager.enemy.curHealth -= Mathf.Max(0, damage - inputManager.enemy.armor - randomDamage);
 		level.UpdateEnemies();
-		eventLogger.ToLog("you dealt: "+ ((Mathf.Max(0, damage - inputManager.enemy.armour - random)).ToString()) +" dmg to " + inputManager.enemy.enemyName);
+		eventLogger.ToLog("you dealt: "+ ((Mathf.Max(0, damage - inputManager.enemy.armor - randomDamage)).ToString()) +" dmg to " + inputManager.enemy.enemyName);
 	}
 
 	public void Move (Direction direction) {

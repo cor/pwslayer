@@ -11,8 +11,6 @@ public class ItemDatabase : MonoBehaviour {
 	void Start() {
 		itemData = JsonMapper.ToObject (File.ReadAllText(Application.dataPath + "/StreamingAssets/Items.json"));
 		ConstructItemDatabase ();
-
-		Debug.Log (FetchItemByID(0).Slug);
 	}
 
 	public Item FetchItemByID(int id) {
@@ -34,7 +32,7 @@ public class ItemDatabase : MonoBehaviour {
 				(int)itemData[i]["id"], 
 				itemData[i]["title"].ToString(), 
 				(int)itemData[i]["stats"]["attack"],
-				(int)itemData[i]["stats"]["armour"],
+				(int)itemData[i]["stats"]["armor"],
 				(int)itemData[i]["stats"]["crit"],
 				(int)itemData[i]["stats"]["speed"],
 				(int)itemData[i]["stats"]["range"],
@@ -53,7 +51,7 @@ public class Item {
 	public int ID { get; set; }
 	public string Title { get; set; }
 	public int Attack { get; set; }
-	public int Armour { get; set; }
+	public int Armor { get; set; }
 	public int Crit { get; set; }
 	public int Speed { get; set; }
 	public int Range { get; set; }
@@ -64,11 +62,11 @@ public class Item {
 	public Sprite Sprite { get; set; }
 
 
-	public Item(int id, string title, int attack, int armour, int crit, int speed, int range, string description, bool stackable, string itemtype, string slug) {
+	public Item(int id, string title, int attack, int armor, int crit, int speed, int range, string description, bool stackable, string itemtype, string slug) {
 		this.ID = id;
 		this.Title = title;
 		this.Attack = attack;
-		this.Armour = armour;
+		this.Armor = armor;
 		this.Crit = crit;
 		this.Speed = speed;
 		this.Range = range;

@@ -30,6 +30,11 @@ public class EventLogger : MonoBehaviour {
 	void OnGUI () {
 		guiStyle.fontSize = Mathf.RoundToInt(Screen.height*0.021f);
 		guiStyle.normal.textColor = Color.white;	
-		GUI.Label(new Rect(5, (Screen.height - (0.3f*Screen.height)),0.6f*Screen.width,0.2f*Screen.height), eventLog, guiStyle);
+		GUI.Label(
+			// x, y, w, h
+			new Rect(8, 40, 0.6f*Screen.width, 0.2f*Screen.height), 
+		 
+		 eventLog, 
+		 guiStyle);
 	}
 }

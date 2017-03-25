@@ -4,7 +4,7 @@
 		"title": "silverlight",
 		"stats": {
 			"attack": 5,
-			"armour": 0,
+			"armor": 0,
 			"crit": 5,
 			"speed": 1,
 			"range": 1
@@ -19,7 +19,7 @@
 		"title": "Absolute Slayer",
 		"stats": {
 			"attack": 10,
-			"armour": 0,
+			"armor": 0,
 			"crit": 15,
 			"speed": 1,
 			"range": 1
@@ -34,7 +34,7 @@
 		"title": "Spear",
 		"stats": {
 			"attack": 7,
-			"armour": 0,
+			"armor": 0,
 			"crit": 25,
 			"speed": 1,
 			"range": 1
@@ -49,7 +49,7 @@
 		"title": "Dragon Whip",
 		"stats": {
 			"attack": 12,
-			"armour": 0,
+			"armor": 0,
 			"crit": 25,
 			"speed": 1,
 			"range": 1
@@ -64,7 +64,7 @@
 		"title": "Huge Axe",
 		"stats": {
 			"attack": 7,
-			"armour": 0,
+			"armor": 0,
 			"crit": 10,
 			"speed": 1,
 			"range": 1

@@ -127,6 +127,11 @@ public class Inventory : MonoBehaviour {
 
 	public void ToggleDisplay() {
 		isDisplayed = !isDisplayed;
+		inventoryPanel.GetComponent<Animator>().SetBool("IsDisplayed", isDisplayed);
+	}
+
+	public Item GetEquipedItem() {
+		return items[equipedItemSlotID];
 	}
 
 	bool CheckIfItemIsInInventory(Item item) {

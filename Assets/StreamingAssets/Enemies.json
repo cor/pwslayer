@@ -1,0 +1,25 @@
+[
+	{
+		"id": 0,
+		"name": "Slime",
+		"slug": "slime",
+		"stats": {
+			"health": 20,
+			"attack": 3,
+			"armor": 0,
+			"crit": 15
+		}
+	},
+	{
+		"id": 1,
+		"name": "Skeleton",
+		"slug": "skeleton",
+		"stats": {
+			"health": 25,
+			"attack": 5,
+			"armor": 3,
+			"crit": 20
+		}
+	}
+		
+]

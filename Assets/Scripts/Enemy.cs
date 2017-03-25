@@ -10,16 +10,13 @@ public class Enemy : MonoBehaviour{
 	public int curHealth;
 	public int attack;
 	public int critChance;
-	public int armour;
+	public int armor;
 
     // Animation
     public float smoothTime = 0.3f;
     private Vector3 velocity = Vector3.zero;
     private Direction lastMoveDirection = Direction.North;
 
-	//AITurn options
-	private int dx;
-	private int dy;
 	public bool playerInRange(){
 		Player player = GameObject.Find("player").GetComponent<Player>();
 		if ((player.position.x - position.x)<= 1 && (player.position.x - position.x)>= -1 && (player.position.y - position.y)<= 1 && (player.position.y - position.y) >= -1) {			
@@ -27,7 +24,6 @@ public class Enemy : MonoBehaviour{
 
 		} else {			
 			return false;
-
 		}
 	}
 	
@@ -39,11 +35,11 @@ public class Enemy : MonoBehaviour{
 			int randomCrit = Random.Range (0, 101); //random int to determine Crit
 			int random = Random.Range (-1, 1); //random int to not have weapons deal set dmg
 			int damage = (randomCrit <= critChance ? attack * 2 : attack);
-			player.health -= Mathf.Max(0, damage - player.armour - random);
-			eventLogger.ToLog(enemyName + " dealt: " + ((Mathf.Max(0, damage - player.armour - random)).ToString()) + " dmg to you");
+			player.health -= Mathf.Max(0, damage - player.armor - random);
+			eventLogger.ToLog(enemyName + " dealt: " + ((Mathf.Max(0, damage - player.armor - random)).ToString()) + " dmg to you");
 		} else { //move towards player
-			dx = player.position.x - position.x;
-			dy = player.position.y - position.y;
+			int dx = player.position.x - position.x;
+			int dy = player.position.y - position.y;
 			Direction? direction = new Vector (dx, dy).ToDirection ();
 			Level level = GameObject.FindWithTag ("Level").GetComponent<Level> ();
 			if (direction.HasValue) {
