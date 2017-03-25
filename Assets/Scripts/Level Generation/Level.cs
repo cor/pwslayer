@@ -638,20 +638,22 @@ public class Level : MonoBehaviour {
  				 position.y > tiles.GetUpperBound(1));
 	}
 
-	
-	void KillEnemies(){
-		int i = 0;
-		List<GameObject> templist = enemies;
+
+	void KillEnemies() {
 		
-		foreach (GameObject enemy in enemies) {
-		Enemy script=enemy.GetComponent<Enemy>();
-		i+=1;	
-			if(script.curHealth<=0){
-				templist.RemoveAt(i-1);
-				Destroy(enemy);
+		// iterate over enemies
+		for (int i = 0; i < enemies.Count; i++) {
+			Enemy enemy = enemies[i].GetComponent<Enemy>();
+
+			// if an enemy should be dead
+			if (enemy.curHealth <= 0) {
+
+				// kill it
+				enemies.RemoveAt(i);
+				Destroy(enemy.gameObject);
 			}
 		}
-		enemies = templist;
+
 	}
 
 	void Render() {
