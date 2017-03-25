@@ -24,6 +24,8 @@ public class Inventory : MonoBehaviour {
 
 	public int equipedItemSlotID = 0; 
 
+	private bool isDisplayed = false;
+
 	void Start() {
 		
 
@@ -121,6 +123,10 @@ public class Inventory : MonoBehaviour {
 
 		// make sure to update the equiped item display
 		EquipItem(equipedItemSlotID);
+	}
+
+	public void ToggleDisplay() {
+		isDisplayed = !isDisplayed;
 	}
 
 	bool CheckIfItemIsInInventory(Item item) {
