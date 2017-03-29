@@ -53,7 +53,14 @@ public class Level : MonoBehaviour {
 		AddDroppedItem(3, new Position(51, 50));
 	}
 
-
+	public bool CheckIsPlayerAlive(){
+		if (GameObject.Find("player").GetComponent<Player>().health>0){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 	public void Generate() {
 
 		DeleteTiles ();
@@ -648,7 +655,12 @@ public class Level : MonoBehaviour {
 		}
 
 	}
-
+	void Update(){
+		if (!CheckIsPlayerAlive()){
+			
+		}
+		
+	}
 	void Render() {
 		RenderTiles ();
 	}
