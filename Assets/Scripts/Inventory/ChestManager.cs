@@ -18,7 +18,7 @@ public class ChestManager : MonoBehaviour {
 	// Places to transfer items to
 	Inventory inventory;
 	Level level;
-	
+
 	// Use this for initialization
 	void Start () {
 		inventory = GameObject.Find("Inventory").GetComponent<Inventory>();
@@ -46,6 +46,6 @@ public class ChestManager : MonoBehaviour {
 	
 	// Toggles wheter the chest panel is visible or not 
 	public void SetOpen(bool open) {
-		chestPanel.SetActive(open);
+		chestPanel.GetComponent<Animator>().SetBool("IsDisplayed", open);
 	}
 }
