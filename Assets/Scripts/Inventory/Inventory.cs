@@ -28,7 +28,6 @@ public class Inventory : MonoBehaviour {
 
 	void Start() {
 		
-
 		database = GetComponent<ItemDatabase> ();
 
 		slotCount = 20;
