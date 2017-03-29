@@ -30,7 +30,7 @@ public class Level : MonoBehaviour {
 
 
 	string[,] tiles;
-	List<GameObject> enemies = new List<GameObject>();
+	public List<GameObject> enemies = new List<GameObject>();
 	public List<GameObject> droppedItems = new List<GameObject>();
 
 
@@ -57,35 +57,35 @@ public class Level : MonoBehaviour {
 	public void Generate() {
 
 		DeleteTiles ();
-		
 		CreateEmptyModel();
-
-		if (customGenerationEnabled) {
-			GenerateCustomModel ();
-		} else {
-			ClearModel();
-			GenerateRandomModel();
-		}
-		
+		ClearModel();
+		GenerateRandomModel();
 		Render ();
-		
-		// AddEnemiesFromEnemyDefinitions ();
 
 	}
 		
-	// void AddEnemiesFromEnemyDefinitions() {
-	// 	for (int i = 0; i < enemyDefinitions.Count; i++) {
+	void AddEnemy() {
+		
+		// Generate random enemy position
+		Room randomRoom = rooms[Random.Range(0, rooms.Count)];
+		Position randomRoomTilePosition = new Position(randomRoom.position.x + 1 + Random.Range(0, (randomRoom.size.width - 2)), 
+											   randomRoom.position.y + 1 + Random.Range(0, randomRoom.size.height - 2));
+											   
+		// Fetch an EnemyDefinition form the database
+		EnemyDefinition enemyDefinition = enemyDefinitionDatabase.FetchEnemyDefinitionByID(0);
 
-	// 		Position enemyPosition = enemyDefinitions [i].position;
+		// Create a new enemy gameobject
+		GameObject enemyClone = (GameObject)Instantiate (slime, new Vector3 (0, 0, -1), transform.rotation);
+		enemyClone.transform.parent = transform;
+		
+		// give it the correct data
+		Enemy enemy = enemyClone.GetComponent<Enemy> ();
+		enemy.definition = enemyDefinition;
+		enemy.position = randomRoomTilePosition;
+		enemy.health = enemy.definition.maxHealth; // Give an enemy it's max health at the start
 
-	// 		GameObject enemyClone = (GameObject)Instantiate (slime, new Vector3 (enemyPosition.x, enemyPosition.y, -1), transform.rotation);
-	// 		enemyClone.transform.parent = transform;
-	// 		slime.GetComponent<Enemy> ().position = enemyPosition;
-
-	// 		enemies.Add(enemyClone);
-			
-	// 	}
-	// }
+		enemies.Add(enemyClone);
+	}
 
 
 	void DeleteTiles() {
@@ -100,7 +100,7 @@ public class Level : MonoBehaviour {
 		DelteUsedOpenings();
 		DeleteTunnels();
 		DeleteChests();
-		// DeleteEnemyDefinitions();
+		DeleteEnemies();
 	}
 	void DeleteRooms() {
 		rooms = new List<Room>();
@@ -122,9 +122,9 @@ public class Level : MonoBehaviour {
 		usedOpenings = new List<Opening>();
 	}
 
-	// void DeleteEnemyDefinitions() {
-	// 	enemyDefinitions = new List<EnemyDefinition>();
-	// }
+	void DeleteEnemies() {
+		enemies = new List<GameObject>();
+	}
 
 
 	void SpawnTile(GameObject tile, Position position) {
@@ -140,12 +140,6 @@ public class Level : MonoBehaviour {
 			for (int y = 0; y < tiles.GetLength(1); y++) {
 				tiles [x, y] = "void";
 			}
-		}
-	}
-
-	void GenerateCustomModel() {
-		for (int i = 0; i < rooms.Count; i++) {
-			AddRoomToTiles (rooms[i]);
 		}
 	}
 
@@ -174,9 +168,9 @@ public class Level : MonoBehaviour {
 			UpdateTiles();
 		}
 
-		// for (int i = 0; i < enemyCount; i++) {
-		// 	AddEnemyDefinition();
-		// }
+		for (int i = 0; i < enemyCount; i++) {
+			AddEnemy();
+		}
 
 	}
 
@@ -352,12 +346,6 @@ public class Level : MonoBehaviour {
 
 	}
 
-	// void AddEnemyDefinition() {
-	// 	Room randomRoom = rooms[Random.Range(0, rooms.Count)];
-	// 	Position randomRoomTilePosition = new Position(randomRoom.position.x + 1 + Random.Range(0, (randomRoom.size.width - 2)), 
-	// 										   randomRoom.position.y + 1 + Random.Range(0, randomRoom.size.height - 2));
-	// 	enemyDefinitions.Add(new EnemyDefinition(randomRoomTilePosition));
-	// }
 
 	void AddRoom() {
 
@@ -651,7 +639,7 @@ public class Level : MonoBehaviour {
 			Enemy enemy = enemies[i].GetComponent<Enemy>();
 
 			// if an enemy should be dead
-			if (enemy.curHealth <= 0) {
+			if (enemy.health <= 0) {
 
 				// kill it
 				enemies.RemoveAt(i);

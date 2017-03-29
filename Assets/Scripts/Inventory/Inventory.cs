@@ -132,6 +132,7 @@ public class Inventory : MonoBehaviour {
 
 	public Item GetEquipedItem() {
 		return items[equipedItemSlotID];
+		Debug.Log("trying to equip");
 	}
 
 	bool CheckIfItemIsInInventory(Item item) {

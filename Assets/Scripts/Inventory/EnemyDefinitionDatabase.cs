@@ -14,7 +14,6 @@ public class EnemyDefinitionDatabase : MonoBehaviour {
 		enemyData = JsonMapper.ToObject(File.ReadAllText(Application.dataPath + "/StreamingAssets/Enemies.json"));
 		ConstructEnemyDefinitionDatabase();
 
-		Debug.Log(FetchEnemyDefinitionByID(0).slug);
 	}
 	
 	public EnemyDefinition FetchEnemyDefinitionByID(int id) {

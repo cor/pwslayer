@@ -3,23 +3,25 @@ using System.Collections;
 
 public class Enemy : MonoBehaviour{
 
-	public string enemyName = "slime";
+	public EnemyDefinition definition;
+	
     public Position position;
-    public bool flipped;
-    public int maxHealth;
-	public int curHealth;
-	public int attack;
-	public int critChance;
-	public int armor;
+	public int health;
+
 
     // Animation
+    public bool flipped;
     public float smoothTime = 0.3f;
     private Vector3 velocity = Vector3.zero;
     private Direction lastMoveDirection = Direction.North;
 
 	public bool playerInRange(){
 		Player player = GameObject.Find("player").GetComponent<Player>();
-		if ((player.position.x - position.x)<= 1 && (player.position.x - position.x)>= -1 && (player.position.y - position.y)<= 1 && (player.position.y - position.y) >= -1) {			
+		if ((player.position.x - position.x) <= 1 && 
+		    (player.position.x - position.x) >= -1 && 
+			(player.position.y - position.y) <= 1 && 
+			(player.position.y - position.y) >= -1) {			
+				
 			return true;
 
 		} else {			
@@ -34,9 +36,9 @@ public class Enemy : MonoBehaviour{
 		if (playerInRange ()) { //attack
 			int randomCrit = Random.Range (0, 101); //random int to determine Crit
 			int random = Random.Range (-1, 1); //random int to not have weapons deal set dmg
-			int damage = (randomCrit <= critChance ? attack * 2 : attack);
+			int damage = (randomCrit <= definition.critChance ? definition.attack * 2 : definition.attack);
 			player.health -= Mathf.Max(0, damage - player.armor - random);
-			eventLogger.ToLog(enemyName + " dealt: " + ((Mathf.Max(0, damage - player.armor - random)).ToString()) + " dmg to you");
+			eventLogger.ToLog(definition.name + " dealt: " + ((Mathf.Max(0, damage - player.armor - random)).ToString()) + " dmg to you");
 		} else { //move towards player
 			int dx = player.position.x - position.x;
 			int dy = player.position.y - position.y;
@@ -66,9 +68,6 @@ public class Enemy : MonoBehaviour{
 		}
 	}
 
-	void Start(){
-		curHealth = maxHealth;
-	}
   
 	public void Update(){
 		Render();

@@ -14,7 +14,7 @@ public HealthBar healthBar;
         {
 			enemy = enemies[i].GetComponent<Enemy>();
 			healthBar = healthBars[i].GetComponent<HealthBar>();
-			healthBar.HealthRemaining = ((float)enemy.curHealth)/((float)enemy.maxHealth);
+			healthBar.HealthRemaining = ((float)enemy.health)/((float)enemy.definition.maxHealth);
             
         }
 	}
