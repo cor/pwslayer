@@ -26,18 +26,19 @@ public class InputManager : MonoBehaviour {
 			
 
 	private bool IsPointerOverUIObject() {
-		foreach (Touch touch in Input.touches) {
-			int id = touch.fingerId;
-			if (EventSystem.current.IsPointerOverGameObject(id))
-			{
-				// ui touched
-			}
-		}
 		PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
 		eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
 		List<RaycastResult> results = new List<RaycastResult>();
 		EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
 		return results.Count > 0;
+	}
+
+	private bool IsTouchOverUIObject(Touch touch) {
+		PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+		eventDataCurrentPosition.position = new Vector2(touch.position.x, touch.position.y);
+		List<RaycastResult> results = new List<RaycastResult>();
+		EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+		return results.Count > 1;
 	}
 
 
@@ -67,7 +68,8 @@ public class InputManager : MonoBehaviour {
 		}
 
 		foreach (Touch touch in Input.touches) {
-			if (touch.phase == TouchPhase.Ended) {
+			if (touch.phase == TouchPhase.Ended && !IsTouchOverUIObject(touch)) {
+			// if (touch.phase == TouchPhase.Ended) {
 
 				ray = Camera.main.ScreenPointToRay (touch.position);
 				CheckArrayOfEnemies();
