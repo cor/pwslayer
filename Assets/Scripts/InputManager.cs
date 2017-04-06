@@ -26,6 +26,13 @@ public class InputManager : MonoBehaviour {
 			
 
 	private bool IsPointerOverUIObject() {
+		foreach (Touch touch in Input.touches) {
+			int id = touch.fingerId;
+			if (EventSystem.current.IsPointerOverGameObject(id))
+			{
+				// ui touched
+			}
+		}
 		PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
 		eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
 		List<RaycastResult> results = new List<RaycastResult>();
@@ -56,6 +63,48 @@ public class InputManager : MonoBehaviour {
 			if (Input.GetKeyDown (keymap.Key)) {
 				player.GetComponent<Player>().Move (keymap.Value);
 				break;
+			}
+		}
+
+		foreach (Touch touch in Input.touches) {
+			if (touch.phase == TouchPhase.Ended) {
+
+				ray = Camera.main.ScreenPointToRay (touch.position);
+				CheckArrayOfEnemies();
+				if(clickedOnEnemy){
+					clickedOnEnemy = false;
+				}
+				else {		
+					// Check if there is an item to be picked up
+					int dx = Mathf.RoundToInt (ray.origin.x - player.transform.position.x);
+					int dy = Mathf.RoundToInt (ray.origin.y - player.transform.position.y);
+					
+					Level level = GameObject.FindWithTag("Level").GetComponent<Level>();
+					Position clickInLevelPosition = new Position(Mathf.RoundToInt(ray.origin.x), Mathf.RoundToInt(ray.origin.y));
+					Inventory inventory = GameObject.Find("Inventory").GetComponent<Inventory>();
+
+					
+					DroppedItem droppedItem = level.DroppedItemAtPosition(clickInLevelPosition);
+					if (droppedItem != null) {
+						inventory.AddItem(droppedItem.itemID);
+						level.RemoveDroppedItem(clickInLevelPosition);
+						
+						EventLogger eventLogger = GameObject.Find("EventLog").GetComponent<EventLogger>();
+						eventLogger.ToLog("Picked up " + inventory.database.FetchItemByID(droppedItem.itemID).Title);
+
+					} else if (level.ChestAtPosition(clickInLevelPosition) != -1) {
+						ChestManager chestManager = GameObject.Find("ChestManager").GetComponent<ChestManager>();
+						chestManager.SetOpen(true);
+						
+					} else {
+						// If there isn't an item to be picked up, move the player in the cursor direcitiion
+						Direction? direction = new Vector (dx, dy).ToDirection ();
+						if (direction.HasValue) {
+							player.GetComponent<Player> ().Move (direction.Value);
+						}
+						
+					}
+				}
 			}
 		}
 
