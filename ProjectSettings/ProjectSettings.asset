@@ -431,7 +431,9 @@ PlayerSettings:
   webGLUseEmbeddedResources: 0
   webGLUseWasm: 0
   webGLCompressionFormat: 1
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    1: Text
+    4: Text
   platformArchitecture:
     iOS: 2
     tvOS: 1

@@ -24,7 +24,7 @@ public class Inventory : MonoBehaviour {
 
 	public int equipedItemSlotID = 0; 
 
-	private bool isDisplayed = false;
+	private bool isDisplayed = true;
 
 	void Start() {
 		

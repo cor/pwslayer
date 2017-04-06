@@ -11,7 +11,7 @@ public class EnemyDefinitionDatabase : MonoBehaviour {
 	private JsonData enemyData;
 	
 	void Start () {
-		enemyData = JsonMapper.ToObject(File.ReadAllText(Application.dataPath + "/StreamingAssets/Enemies.json"));
+		enemyData = JsonMapper.ToObject(File.ReadAllText(Application.streamingAssetsPath + "/Enemies.json"));
 		ConstructEnemyDefinitionDatabase();
 
 	}
